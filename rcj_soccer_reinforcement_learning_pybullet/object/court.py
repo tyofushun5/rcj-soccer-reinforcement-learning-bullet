@@ -9,7 +9,9 @@ import pybullet_data
 
 class Court(object):
 
-    def __init__(self, create_position):
+    def __init__(self, create_position=None):
+        if create_position is None:
+            create_position = [4.0, 0.0, 0.0]
         self.cp = create_position
         self.num_lines = 8
         self.line_ids = []

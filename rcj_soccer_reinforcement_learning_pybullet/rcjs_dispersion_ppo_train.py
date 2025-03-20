@@ -19,7 +19,7 @@ def make_env():
                                create_position=[4.0, 0.0, 0.0],
                                magnitude=10.0,
                                gui=False)
-        check_env(env)
+        # check_env(env)
         return env
     return _init
 
@@ -39,8 +39,8 @@ def main():
                 batch_size=128*num_envs,
                 gamma=0.99)
 
-    model.learn(total_timesteps=100000000, callback=checkpoint_callback)
-    model.save(os.path.join(save_dir, "RCJ_ppo_model_v1"))
+    model.learn(total_timesteps=5000000, callback=checkpoint_callback)
+    model.save(os.path.join(save_dir, "RCJ_ppo_model_v5"))
 
     env.close()
 

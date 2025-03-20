@@ -10,9 +10,9 @@ os.makedirs(save_dir, exist_ok=True)
 def main():
     # 環境の作成
     env = GoalEnvironment(create_position=[4.0, 0.0, 0.0],
-                           max_steps=5000,
-                           magnitude=10.0,
-                           gui=True)
+                          max_steps=5000,
+                          magnitude=10.0,
+                          gui=True)
 
     model = RecurrentPPO(
         "MlpLstmPolicy",
@@ -28,7 +28,7 @@ def main():
 
     model.learn(total_timesteps=5000000)
 
-    model.save(os.path.join(save_dir, "RCJ_ppo_model_v1"))
+    model.save(os.path.join(save_dir, "RCJ_ppo_model_v2"))
 
     env.close()
 

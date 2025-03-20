@@ -20,7 +20,7 @@ class GoalRewardCalculation(object):
         self.is_goal = False
         self.is_out = False
 
-        # reward -= step_count*0.01
+        reward -= step_count*0.001
 
         agent_pos, _ = p.getBasePositionAndOrientation(agent_id)
 
@@ -41,7 +41,7 @@ class GoalRewardCalculation(object):
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 6
+            reward += 7.0
             self.is_touch = True
         else:
             reward -= 0.3
@@ -64,11 +64,13 @@ class GoalRewardCalculation(object):
                 reward -= 0.1
         angle = self.cal.angle_calculation_id(agent_id, ball_id)
         if angle<=90 or angle>=270:
-            reward += 0.2
-        else:
-            reward -= 0.2
-        if angle<=45 or angle>=315:
             reward += 0.5
+        else:
+            reward -= 0.5
+        if angle<=45 or angle>=315:
+            reward += 2.0
+        else:
+            reward -= 1.0
         return reward
 
 class SecondRewardCalculation(object):
