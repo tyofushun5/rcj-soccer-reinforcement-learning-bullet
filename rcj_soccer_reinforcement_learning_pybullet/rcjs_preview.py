@@ -8,12 +8,12 @@ from rcj_soccer_reinforcement_learning_pybullet.environment.goal_environment imp
 save_dir = "model"
 
 def main():
-    preview_env = GoalEnvironment(max_steps=5000,
+    preview_env = GoalEnvironment(max_steps=10000,
                                    create_position=[4.0, 0.0, 0.0],
                                    magnitude=10.0,
                                    gui=True)
 
-    model_path = os.path.join(save_dir, "RCJ_ppo_model_v5")
+    model_path = os.path.join(save_dir, "RCJ_ppo_model_v8")
     loaded_model = RecurrentPPO.load(model_path, env=preview_env)
 
     observation, info = preview_env.reset()

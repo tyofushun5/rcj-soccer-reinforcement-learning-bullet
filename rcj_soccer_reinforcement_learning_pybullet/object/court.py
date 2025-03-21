@@ -15,8 +15,8 @@ class Court(object):
         self.cp = create_position
         self.num_lines = 8
         self.line_ids = []
-        self.line_default_color = [1, 1, 1]
-        self.line_hit_color = [1, 0, 0]
+        self.line_default_color = [0.0, 1.0, 0.0]
+        self.line_hit_color = [1.0, 0.0, 0.0]
         self.line_height = 0.01
         self.line_from = [[0.12, 0.12, self.line_height],
                          [1.76, 0.12, self.line_height],
@@ -109,6 +109,26 @@ class Court(object):
             baseVisualShapeIndex=yellow_goal_visual,
             basePosition=[self.cp[0]+1.24, self.cp[1]+2.45, self.cp[2]+0.0],
             baseOrientation=p.getQuaternionFromEuler([np.pi/2.0, 0.0, np.pi/2.0])
+        )
+
+        line_collision = p.createCollisionShape(
+            shapeType=p.GEOM_SPHERE,
+            radius=1e-10
+        )
+
+        line_visual = p.createVisualShape(
+            shapeType=p.GEOM_MESH,
+            fileName="stl/line.stl",
+            meshScale=[0.001, 0.001, 0.001],
+            rgbaColor=[1.0, 1.0, 1.0, 1]
+        )
+
+        line_id = p.createMultiBody(
+            baseMass=0,
+            baseCollisionShapeIndex=line_collision,
+            baseVisualShapeIndex=line_visual,
+            basePosition=[self.cp[0]+0.14, self.cp[1]+0.14, self.cp[2]+0.0],
+            baseOrientation=p.getQuaternionFromEuler([0.0, 0.0, 0.0])
         )
 
         return wall_id, blue_goal_id, yellow_goal_id

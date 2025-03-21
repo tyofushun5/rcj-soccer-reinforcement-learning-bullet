@@ -37,13 +37,14 @@ class Agent(Robot):
 
          agent_collision = p.createCollisionShape(
              shapeType=p.GEOM_MESH,
-             fileName="stl/robot_v2.stl",
+             fileName="stl/robot_v2_collision.stl",
              meshScale=[0.001, 0.001, 0.001]
          )
+
          #外観設定
          agent_visual = p.createVisualShape(
              shapeType=p.GEOM_MESH,
-             fileName="stl/robot_v2.stl",
+             fileName="stl/robot_v2_visual.stl",
              meshScale=[0.001, 0.001, 0.001],
              rgbaColor=[0.2, 0.2, 0.2, 1] #黒色
          )
@@ -55,6 +56,7 @@ class Agent(Robot):
              basePosition=self.position,
              baseOrientation = p.getQuaternionFromEuler([np.pi/2.0, 0.0, np.pi])
          )
+
          return agent_id
 
 
