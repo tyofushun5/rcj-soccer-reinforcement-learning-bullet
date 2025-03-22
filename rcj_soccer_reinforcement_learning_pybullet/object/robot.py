@@ -1,9 +1,11 @@
 import abc
+import math
 
+import cv2 as cv
 import pybullet as p
 import numpy as np
 
-from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tool import CalculationTool
+from rcj_soccer_reinforcement_learning_pybullet.tools.tool import CalculationTool
 
 class Robot(metaclass=abc.ABCMeta):
     @abc.abstractmethod
@@ -60,16 +62,16 @@ class Agent(Robot):
          return agent_id
 
 
-    def action(self, robot_id, angle_deg=0, magnitude=7.0):
+    def action(self, agent_id, angle_deg=0, magnitude=7.0):
         """ロボットを動かすメソッド"""
 
         # Dynamics情報を取得
-        dynamics_info = p.getDynamicsInfo(robot_id, -1)
+        dynamics_info = p.getDynamicsInfo(agent_id, -1)
         center_of_mass = dynamics_info[3]  # 重心の位置
 
         # 摩擦係数を調整
         p.changeDynamics(
-            bodyUniqueId=robot_id,
+            bodyUniqueId=agent_id,
             linkIndex=-1,
             lateralFriction=0.5,  # 摩擦係数
             spinningFriction=0.1,  # 回転摩擦
@@ -81,7 +83,7 @@ class Agent(Robot):
 
         #中心に力を加える
         p.applyExternalForce(
-            objectUniqueId=robot_id,
+            objectUniqueId=agent_id,
             linkIndex=-1,
             forceObj=[x, y, 0],
             posObj=center_of_mass,
@@ -90,10 +92,60 @@ class Agent(Robot):
 
         # 回転速度をリセット
         p.resetBaseVelocity(
-            objectUniqueId=robot_id,
+            objectUniqueId=agent_id,
             angularVelocity=[0.0, 0.0, 0.0]  # 回転速度
         )
 
+    @staticmethod
+    def get_camera_image(robot_id, width=84, height=84):
+
+        position, orientation = p.getBasePositionAndOrientation(robot_id)
+        euler_orientation = p.getEulerFromQuaternion(orientation)
+
+        yaw = euler_orientation[2] - math.pi/2
+        pitch = -math.radians(30)
+
+        forward = [
+            math.cos(pitch) * math.cos(yaw),
+            math.cos(pitch) * math.sin(yaw),
+            math.sin(pitch)
+        ]
+
+        up = [
+            -math.sin(pitch) * math.cos(yaw),
+            -math.sin(pitch) * math.sin(yaw),
+            math.cos(pitch)
+        ]
+
+        camera_position = [
+            position[0],
+            position[1]+0.024402,
+            position[2]+0.162174
+        ]
+
+        cam_target = [
+            camera_position[0]+forward[0],
+            camera_position[1]+forward[1],
+            camera_position[2]+forward[2]]
+
+        view_matrix = p.computeViewMatrix(
+            cameraEyePosition=camera_position,
+            cameraTargetPosition=cam_target,
+            cameraUpVector=up
+        )
+
+        projection_matrix = p.computeProjectionMatrixFOV(
+            fov=102,
+            aspect=width / height,
+            nearVal=0.1,
+            farVal=100.0
+        )
+
+        _, _, rgb, _, _ = p.getCameraImage(width, height, view_matrix, projection_matrix)
+
+        rgb_array = np.reshape(rgb, (height, width, 4))
+        rgb_image = rgb_array[:, :, :3]             # RGB
+        return rgb_array[:, :, :3]
 
 if __name__ == '__main__':
     import doctest

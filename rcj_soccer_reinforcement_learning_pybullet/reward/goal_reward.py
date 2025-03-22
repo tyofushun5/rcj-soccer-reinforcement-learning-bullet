@@ -1,6 +1,6 @@
 import pybullet as p
 
-from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tool import CalculationTool
+from rcj_soccer_reinforcement_learning_pybullet.tools.tool import CalculationTool
 
 class GoalRewardCalculation(object):
     def __init__(self):
@@ -59,18 +59,18 @@ class GoalRewardCalculation(object):
             reward -= 0.5
         if p.getContactPoints(yellow_goal_id, agent_id):
             reward -= 0.5
-        # for i in range(len(hit_ids)):
-        #     if hit_ids[i] == agent_id:
-        #         reward -= 0.1
+        for i in range(len(hit_ids)):
+            if hit_ids[i] == agent_id:
+                reward -= 0.1
         angle = self.cal.angle_calculation_id(agent_id, ball_id)
         if angle<=90 or angle>=270:
-            reward += 0.3
-        else:
-            reward -= 0.3
-        if angle<=45 or angle>=315:
             reward += 0.2
         else:
             reward -= 0.2
+        if angle<=45 or angle>=315:
+            reward += 0.1
+        else:
+            reward -= 0.1
         return reward
 
 class SecondRewardCalculation(object):

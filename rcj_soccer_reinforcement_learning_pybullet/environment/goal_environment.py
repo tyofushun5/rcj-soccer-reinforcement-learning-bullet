@@ -7,7 +7,7 @@ import pybullet_data
 from gymnasium import spaces
 
 from rcj_soccer_reinforcement_learning_pybullet.object.unit import Unit
-from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tool import CalculationTool
+from rcj_soccer_reinforcement_learning_pybullet.tools.tool import CalculationTool
 from rcj_soccer_reinforcement_learning_pybullet.reward.goal_reward import GoalRewardCalculation
 
 class GoalEnvironment(gym.Env):
@@ -22,8 +22,9 @@ class GoalEnvironment(gym.Env):
         p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
         p.resetDebugVisualizerCamera(cameraDistance=1.5, cameraYaw=50, cameraPitch=-35, cameraTargetPosition=[0, 0, 0])
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
-        p.loadSDF("stadium.sdf")
         p.setGravity(0, 0, -9.81)
+        p.loadSDF("stadium.sdf")
+
         self.action_space = spaces.Discrete(360)
         self.observation_space = spaces.Box(low=-np.inf,
                                             high=np.inf,
@@ -48,6 +49,9 @@ class GoalEnvironment(gym.Env):
         truncated = False
         info = {}
         self.step_count += 1
+
+        if self.step_count % 10 == 0:
+            self.unit.get_image()
 
         self.unit.action(robot_id=self.unit.agent_id,
                          angle_deg=action,

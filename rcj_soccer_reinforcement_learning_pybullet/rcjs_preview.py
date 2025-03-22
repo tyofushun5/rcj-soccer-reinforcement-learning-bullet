@@ -13,7 +13,7 @@ def main():
                                    magnitude=10.0,
                                    gui=True)
 
-    model_path = os.path.join(save_dir, "RCJ_ppo_model_v8")
+    model_path = os.path.join(save_dir, "RCJ_ppo_model_v13")
     loaded_model = RecurrentPPO.load(model_path, env=preview_env)
 
     observation, info = preview_env.reset()

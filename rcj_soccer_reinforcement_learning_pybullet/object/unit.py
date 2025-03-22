@@ -1,3 +1,5 @@
+import pybullet as p
+
 from rcj_soccer_reinforcement_learning_pybullet.object.court import Court
 from rcj_soccer_reinforcement_learning_pybullet.object.robot import Agent
 
@@ -27,6 +29,7 @@ class Unit(object):
         self.ball_id = self.court.create_ball()
         self.agent_id = self.agent.create(agent_pos)
         self.previous_agent_pos = self.agent.start_pos
+        Unit.set_camera(self.cp)
 
     def detection_line(self):
         self.hit_ids = self.court.detection_line()
@@ -34,4 +37,15 @@ class Unit(object):
 
     def action(self, robot_id, angle_deg, magnitude):
         self.agent.action(robot_id, angle_deg, magnitude)
+
+    def get_image(self):
+        self.agent.get_camera_image(self.agent_id)
+
+    @staticmethod
+    def set_camera(position):
+        p.resetDebugVisualizerCamera(cameraDistance=1.70,
+                                     cameraYaw=90,
+                                     cameraPitch=-45,
+                                     cameraTargetPosition=[position[0]+0.91, position[1]+1.25, position[2]])
+
 

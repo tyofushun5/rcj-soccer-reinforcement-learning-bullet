@@ -52,16 +52,17 @@ class CalculationTool(object):
     def movement_reward_calculation(reward, pos, previous_pos, past_distance):
         distance = CalculationTool.euclidean_distance_pos(pos, previous_pos)
         if distance < past_distance:
-            reward += 0.5
+            reward += 0.3
         else:
-            reward -= 0.5
+            reward -= 0.3
         return reward
 
     @staticmethod
     def distance_reward_calculation(reward, agent_pos, ball_pos, ball_past_distance):
         distance = CalculationTool.euclidean_distance_pos(agent_pos, ball_pos)
         if distance < ball_past_distance:
-            reward += 0.6
+            reward += 0.2
         else:
-            reward -= 0.6
+            reward -= 0.2
         return reward
+

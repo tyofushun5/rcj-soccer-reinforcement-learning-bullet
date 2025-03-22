@@ -15,9 +15,9 @@ checkpoint_callback = CheckpointCallback(save_freq=100000,
 
 def make_env():
     def _init():
-        env = GoalEnvironment(max_steps=5000,
+        env = GoalEnvironment(max_steps=20000,
                                create_position=[4.0, 0.0, 0.0],
-                               magnitude=10.0,
+                               magnitude=9.0,
                                gui=False)
         # check_env(env)
         return env
@@ -40,7 +40,7 @@ def main():
                 gamma=0.99)
 
     model.learn(total_timesteps=5000000, callback=checkpoint_callback)
-    model.save(os.path.join(save_dir, "RCJ_ppo_model_v9"))
+    model.save(os.path.join(save_dir, "RCJ_ppo_model_v13"))
 
     env.close()
 
