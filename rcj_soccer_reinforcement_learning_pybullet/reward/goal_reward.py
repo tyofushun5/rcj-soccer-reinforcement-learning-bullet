@@ -28,8 +28,8 @@ class GoalRewardCalculation(object):
                                                    agent_pos,
                                                    self.previous_attacker_pos,
                                                    self.past_distance,
-                                                   fine=0.3,
-                                                   penalty=0.3)
+                                                   fine=0.4,
+                                                   penalty=0.4)
         self.previous_attacker_pos = agent_pos
 
         ball_pos, _ = p.getBasePositionAndOrientation(ball_id)

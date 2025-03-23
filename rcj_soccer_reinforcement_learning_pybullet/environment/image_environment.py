@@ -101,9 +101,9 @@ class ImageEnvironment(gym.Env):
         if  self.reward_cal.is_out:
             truncated = True
 
-        #print(my_goal_angle, enemy_goal_angle, reward)
-        #print(observation)
-        #print(reward)
+        if self.step_count % 10 == 0:
+            print(reward,ball_angle)
+
         return observation, reward, terminated, truncated, info
 
     def reset(self, seed=None, options=None):
