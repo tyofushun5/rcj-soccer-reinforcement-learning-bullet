@@ -8,7 +8,7 @@ from stable_baselines3.common.callbacks import CheckpointCallback
 
 
 checkpoint_callback = CheckpointCallback(save_freq=100000,
-                                         save_path='model',
+                                         save_path='../model',
                                          name_prefix='RCJ_ppo_model',
                                          save_replay_buffer=True,
                                          save_vecnormalize=True)
@@ -24,7 +24,7 @@ def make_env():
     return _init
 
 def main():
-    save_dir = "model"
+    save_dir = "../model"
     os.makedirs(save_dir, exist_ok=True)
 
     num_envs = 12

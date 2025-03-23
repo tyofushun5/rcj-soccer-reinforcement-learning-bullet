@@ -3,7 +3,7 @@ import os
 from sb3_contrib import RecurrentPPO
 from rcj_soccer_reinforcement_learning_pybullet.environment.goal_environment import GoalEnvironment
 
-save_dir = "model"
+save_dir = "../model"
 os.makedirs(save_dir, exist_ok=True)
 
 def main():
