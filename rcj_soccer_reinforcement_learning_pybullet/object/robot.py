@@ -5,7 +5,7 @@ import cv2 as cv
 import pybullet as p
 import numpy as np
 
-from rcj_soccer_reinforcement_learning_pybullet.tools.tool import CalculationTool
+from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tools import CalculationTool
 
 class Robot(metaclass=abc.ABCMeta):
     @abc.abstractmethod
@@ -141,11 +141,15 @@ class Agent(Robot):
             farVal=100.0
         )
 
-        _, _, rgb, _, _ = p.getCameraImage(width, height, view_matrix, projection_matrix)
+        _, _, rgb, _, _ = p.getCameraImage(width,
+                                           height,
+                                           view_matrix,
+                                           projection_matrix,
+                                           renderer=p.ER_TINY_RENDERER)
 
         rgb_array = np.reshape(rgb, (height, width, 4))
-        rgb_image = rgb_array[:, :, :3]             # RGB
-        return rgb_array[:, :, :3]
+        rgb_image = rgb_array[:, :, :3].astype(np.uint8)
+        return rgb_image
 
 if __name__ == '__main__':
     import doctest

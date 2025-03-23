@@ -49,20 +49,32 @@ class CalculationTool(object):
         return vector_x, vector_y
 
     @staticmethod
-    def movement_reward_calculation(reward, pos, previous_pos, past_distance):
+    def movement_reward_calculation(reward,
+                                    pos,
+                                    previous_pos,
+                                    past_distance,
+                                    fine=0.0,
+                                    penalty=0.0
+                                    ):
         distance = CalculationTool.euclidean_distance_pos(pos, previous_pos)
         if distance < past_distance:
-            reward += 0.3
+            reward += fine
         else:
-            reward -= 0.3
+            reward -= penalty
         return reward
 
     @staticmethod
-    def distance_reward_calculation(reward, agent_pos, ball_pos, ball_past_distance):
+    def distance_reward_calculation(reward,
+                                    agent_pos,
+                                    ball_pos,
+                                    ball_past_distance,
+                                    fine=0.0,
+                                    penalty=0.0
+                                    ):
         distance = CalculationTool.euclidean_distance_pos(agent_pos, ball_pos)
         if distance < ball_past_distance:
-            reward += 0.2
+            reward += fine
         else:
-            reward -= 0.2
+            reward -= penalty
         return reward
 

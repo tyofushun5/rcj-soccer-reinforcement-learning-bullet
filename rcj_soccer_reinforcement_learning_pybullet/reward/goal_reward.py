@@ -1,6 +1,6 @@
 import pybullet as p
 
-from rcj_soccer_reinforcement_learning_pybullet.tools.tool import CalculationTool
+from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tools import CalculationTool
 
 class GoalRewardCalculation(object):
     def __init__(self):
@@ -27,7 +27,9 @@ class GoalRewardCalculation(object):
         reward += self.cal.movement_reward_calculation(reward,
                                                    agent_pos,
                                                    self.previous_attacker_pos,
-                                                   self.past_distance)
+                                                   self.past_distance,
+                                                   fine=0.3,
+                                                   penalty=0.3)
         self.previous_attacker_pos = agent_pos
 
         ball_pos, _ = p.getBasePositionAndOrientation(ball_id)
@@ -35,7 +37,9 @@ class GoalRewardCalculation(object):
         reward += self.cal.distance_reward_calculation(reward,
                                                    agent_pos,
                                                    ball_pos,
-                                                   self.ball_past_distance)
+                                                   self.ball_past_distance,
+                                                   fine=0.3,
+                                                   penalty=0.3)
 
         self.ball_past_distance = self.cal.euclidean_distance_pos(agent_pos,
                                                                   ball_pos)
@@ -52,6 +56,12 @@ class GoalRewardCalculation(object):
         if hit_ids[self.enemy_goal_line_idx] == ball_id:
             reward += 10.0
             self.is_goal = True
+        if hit_ids[self.my_goal_line_idx] == agent_id:
+            reward -= 5.0
+            self.is_out = True
+        if hit_ids[self.enemy_goal_line_idx] == agent_id:
+            reward -= 5.0
+            self.is_out = True
         if p.getContactPoints(wall_id, agent_id):
             reward -= 5.0
             self.is_out = True

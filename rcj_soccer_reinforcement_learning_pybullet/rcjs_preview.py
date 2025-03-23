@@ -1,7 +1,6 @@
 import os
 import time
 
-from stable_baselines3 import PPO
 from sb3_contrib import RecurrentPPO
 from rcj_soccer_reinforcement_learning_pybullet.environment.goal_environment import GoalEnvironment
 
@@ -13,7 +12,7 @@ def main():
                                    magnitude=10.0,
                                    gui=True)
 
-    model_path = os.path.join(save_dir, "RCJ_ppo_model_v13")
+    model_path = os.path.join(save_dir, "RCJ_ppo_model_v9")
     loaded_model = RecurrentPPO.load(model_path, env=preview_env)
 
     observation, info = preview_env.reset()

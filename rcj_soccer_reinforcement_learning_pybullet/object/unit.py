@@ -39,7 +39,9 @@ class Unit(object):
         self.agent.action(robot_id, angle_deg, magnitude)
 
     def get_image(self):
-        self.agent.get_camera_image(self.agent_id)
+        image = self.agent.get_camera_image(self.agent_id)
+
+        return image
 
     @staticmethod
     def set_camera(position):

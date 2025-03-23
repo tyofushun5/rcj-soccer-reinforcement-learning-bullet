@@ -1,6 +1,5 @@
 import os
 
-from stable_baselines3 import PPO
 from sb3_contrib import RecurrentPPO
 from rcj_soccer_reinforcement_learning_pybullet.environment.goal_environment import GoalEnvironment
 
