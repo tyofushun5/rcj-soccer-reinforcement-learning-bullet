@@ -1,20 +1,20 @@
 import os
 
 from sb3_contrib import RecurrentPPO
-from rcj_soccer_reinforcement_learning_pybullet.environment.image_environment import ImageEnvironment
+from rcj_soccer_reinforcement_learning_pybullet.environment.goal_environment import GoalEnvironment
 
 save_dir = "../model"
 os.makedirs(save_dir, exist_ok=True)
 
 def main():
     # 環境の作成
-    env = ImageEnvironment(create_position=[4.0, 0.0, 0.0],
-                          max_steps=10000,
+    env = GoalEnvironment(create_position=[4.0, 0.0, 0.0],
+                          max_steps=5000,
                           magnitude=10.0,
                           gui=True)
 
     model = RecurrentPPO(
-        "MultiInputLstmPolicy",
+        "MlpLstmPolicy",
         env,
         device="cuda",
         verbose=1,
@@ -25,9 +25,9 @@ def main():
         policy_kwargs={"lstm_hidden_size": 256}
     )
 
-    model.learn(total_timesteps=10000000)
+    model.learn(total_timesteps=5000000)
 
-    model.save(os.path.join(save_dir, "image_model_v1"))
+    model.save(os.path.join(save_dir, "only_ball_model_v1"))
 
     env.close()
 

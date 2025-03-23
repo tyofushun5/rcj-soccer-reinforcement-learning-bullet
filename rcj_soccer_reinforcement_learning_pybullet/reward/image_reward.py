@@ -2,7 +2,7 @@ import pybullet as p
 
 from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tools import CalculationTool
 
-class GoalRewardCalculation(object):
+class ImageRewardCalculation(object):
     def __init__(self):
         super().__init__()
         self.my_goal_line_idx = 6
@@ -25,21 +25,21 @@ class GoalRewardCalculation(object):
         agent_pos, _ = p.getBasePositionAndOrientation(agent_id)
 
         reward += self.cal.movement_reward_calculation(reward,
-                                                   agent_pos,
-                                                   self.previous_attacker_pos,
-                                                   self.past_distance,
-                                                   fine=0.4,
-                                                   penalty=0.4)
+                                                       agent_pos,
+                                                       self.previous_attacker_pos,
+                                                       self.past_distance,
+                                                       fine=0.4,
+                                                       penalty=0.4)
         self.previous_attacker_pos = agent_pos
 
         ball_pos, _ = p.getBasePositionAndOrientation(ball_id)
 
         reward += self.cal.distance_reward_calculation(reward,
-                                                   agent_pos,
-                                                   ball_pos,
-                                                   self.ball_past_distance,
-                                                   fine=0.3,
-                                                   penalty=0.3)
+                                                       agent_pos,
+                                                       ball_pos,
+                                                       self.ball_past_distance,
+                                                       fine=0.3,
+                                                       penalty=0.3)
 
         self.ball_past_distance = self.cal.euclidean_distance_pos(agent_pos,
                                                                   ball_pos)

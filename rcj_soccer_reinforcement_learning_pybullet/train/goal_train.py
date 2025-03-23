@@ -27,7 +27,7 @@ def main():
 
     model.learn(total_timesteps=5000000)
 
-    model.save(os.path.join(save_dir, "RCJ_ppo_model_v2"))
+    model.save(os.path.join(save_dir, "goal_model_v2"))
 
     env.close()
 

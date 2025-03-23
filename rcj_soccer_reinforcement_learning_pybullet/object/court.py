@@ -54,14 +54,14 @@ class Court(object):
 
         wall_collision = p.createCollisionShape(
             shapeType=p.GEOM_MESH,
-            fileName="stl/wall.stl",
+            fileName="../stl/wall.stl",
             meshScale=[0.001, 0.001, 0.001],
             flags=p.GEOM_FORCE_CONCAVE_TRIMESH
         )
 
         wall_visual = p.createVisualShape(
             shapeType=p.GEOM_MESH,
-            fileName="stl/wall.stl",
+            fileName="../stl/wall.stl",
             meshScale=[0.001, 0.001, 0.001],
             rgbaColor=[0.22, 0.22, 0.22, 1]
         )
@@ -76,21 +76,21 @@ class Court(object):
 
         goal_collision = p.createCollisionShape(
             shapeType=p.GEOM_MESH,
-            fileName="stl/goal.stl",
+            fileName="../stl/goal.stl",
             meshScale=[0.001, 0.001, 0.001],
             flags=p.GEOM_FORCE_CONCAVE_TRIMESH
         )
 
         blue_goal_visual = p.createVisualShape(
             shapeType=p.GEOM_MESH,
-            fileName="stl/goal.stl",
+            fileName="../stl/goal.stl",
             meshScale=[0.001, 0.001, 0.001],
             rgbaColor=[0.2, 0.3, 0.8, 1]
         )
 
         yellow_goal_visual = p.createVisualShape(
             shapeType=p.GEOM_MESH,
-            fileName="stl/goal.stl",
+            fileName="../stl/goal.stl",
             meshScale=[0.001, 0.001, 0.001],
             rgbaColor=[0.8, 0.7, 0.2, 1]
         )
@@ -118,7 +118,7 @@ class Court(object):
 
         line_visual = p.createVisualShape(
             shapeType=p.GEOM_MESH,
-            fileName="stl/line.stl",
+            fileName="../stl/line.stl",
             meshScale=[0.001, 0.001, 0.001],
             rgbaColor=[1.0, 1.0, 1.0, 1]
         )
