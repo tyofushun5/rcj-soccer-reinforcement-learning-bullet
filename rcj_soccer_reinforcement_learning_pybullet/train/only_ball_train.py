@@ -1,14 +1,14 @@
 import os
 
 from sb3_contrib import RecurrentPPO
-from rcj_soccer_reinforcement_learning_pybullet.environment.goal_environment import GoalEnvironment
+from rcj_soccer_reinforcement_learning_pybullet.environment.only_ball_environment import OnlyBallGoalEnvironment
 
 save_dir = "../model"
 os.makedirs(save_dir, exist_ok=True)
 
 def main():
     # 環境の作成
-    env = GoalEnvironment(create_position=[4.0, 0.0, 0.0],
+    env = OnlyBallGoalEnvironment(create_position=[4.0, 0.0, 0.0],
                           max_steps=5000,
                           magnitude=10.0,
                           gui=True)

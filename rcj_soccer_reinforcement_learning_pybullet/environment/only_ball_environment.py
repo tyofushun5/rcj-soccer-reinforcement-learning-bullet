@@ -10,7 +10,7 @@ from rcj_soccer_reinforcement_learning_pybullet.object.unit import Unit
 from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tools import CalculationTool
 from rcj_soccer_reinforcement_learning_pybullet.reward.only_ball_reward import OnlyBallRewardCalculation
 
-class GoalEnvironment(gym.Env):
+class OnlyBallGoalEnvironment(gym.Env):
     def __init__(self, create_position, max_steps, magnitude, gui=False):
         super().__init__()
         # PyBulletの初期化
@@ -81,7 +81,7 @@ class GoalEnvironment(gym.Env):
                                                     self.unit.yellow_goal_id,
                                                     self.step_count)
 
-        observation = np.array(ball_angle,dtype=np.float32)
+        observation = np.array([ball_angle],dtype=np.float32)
 
         if self.reward_cal.is_goal:
             terminated = True
@@ -113,7 +113,7 @@ class GoalEnvironment(gym.Env):
         self.unit.create_unit(self.cp, self.agent_random_pos)
 
         self.step_count = 0
-        initial_obs = np.array(0.0, dtype=np.float32)
+        initial_obs = np.array([0.0], dtype=np.float32)
         info = {}
         return initial_obs, info
 

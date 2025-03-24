@@ -2,7 +2,7 @@ import os
 
 from sb3_contrib import RecurrentPPO
 from stable_baselines3.common.vec_env import SubprocVecEnv
-from rcj_soccer_reinforcement_learning_pybullet.environment.goal_environment import GoalEnvironment
+from rcj_soccer_reinforcement_learning_pybullet.environment.only_ball_environment import OnlyBallGoalEnvironment
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.callbacks import CheckpointCallback
 
@@ -15,7 +15,7 @@ checkpoint_callback = CheckpointCallback(save_freq=100000,
 
 def make_env():
     def _init():
-        env = GoalEnvironment(max_steps=20000,
+        env = OnlyBallGoalEnvironment(max_steps=5000,
                               create_position=[4.0, 0.0, 0.0],
                               magnitude=9.0,
                               gui=False)
@@ -39,8 +39,8 @@ def main():
                          batch_size=128*num_envs,
                          gamma=0.99)
 
-    model.learn(total_timesteps=5000000, callback=checkpoint_callback)
-    model.save(os.path.join(save_dir, "dispersion_only_goal_model_v1"))
+    model.learn(total_timesteps=1000000)
+    model.save(os.path.join(save_dir, "dispersion_only_goal_model_v2"))
 
     env.close()
 
