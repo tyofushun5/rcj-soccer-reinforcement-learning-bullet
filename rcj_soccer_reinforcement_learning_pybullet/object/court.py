@@ -10,9 +10,12 @@ import pybullet_data
 
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-goal_path = os.path.join(script_dir, "goal.stl")
-wall_path = os.path.join(script_dir, "wall.stl")
-line_path = os.path.join(script_dir, "line.stl")
+
+stl_dir = os.path.join(script_dir, "stl")
+
+goal_path = os.path.join(stl_dir, "goal.stl")
+wall_path = os.path.join(stl_dir, "wall.stl")
+line_path = os.path.join(stl_dir, "line.stl")
 
 
 class Court(object):
