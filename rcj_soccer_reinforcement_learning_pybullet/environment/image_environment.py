@@ -70,8 +70,8 @@ class ImageEnvironment(gym.Env):
 
         image_obs = self.unit.get_image()
 
-        # cv.imshow('name',image_obs)
-        # cv.waitKey(1)
+        cv.imshow('name',image_obs)
+        cv.waitKey(1)
 
         ball_angle = self.cal.angle_calculation_id(self.unit.agent_id,
                                                    self.unit.ball_id)

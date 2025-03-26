@@ -11,7 +11,7 @@ def main():
     env = ImageEnvironment(create_position=[4.0, 0.0, 0.0],
                           max_steps=10000,
                           magnitude=10.0,
-                          gui=True)
+                          gui=False)
 
     model = RecurrentPPO(
         "MultiInputLstmPolicy",

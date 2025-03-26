@@ -1,4 +1,5 @@
 import abc
+import os
 import math
 
 import cv2 as cv
@@ -6,6 +7,12 @@ import pybullet as p
 import numpy as np
 
 from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tools import CalculationTool
+
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+robot_collision_path = os.path.join(script_dir, "robot_v2_collision.stl")
+robot_visual_path = os.path.join(script_dir, "robot_v2_visual.stl")
+
 
 class Robot(metaclass=abc.ABCMeta):
     @abc.abstractmethod
@@ -39,14 +46,14 @@ class Agent(Robot):
 
          agent_collision = p.createCollisionShape(
              shapeType=p.GEOM_MESH,
-             fileName="../stl/robot_v2_collision.stl",
+             fileName=robot_collision_path,
              meshScale=[0.001, 0.001, 0.001]
          )
 
          #外観設定
          agent_visual = p.createVisualShape(
              shapeType=p.GEOM_MESH,
-             fileName="../stl/robot_v2_visual.stl",
+             fileName=robot_visual_path,
              meshScale=[0.001, 0.001, 0.001],
              rgbaColor=[0.2, 0.2, 0.2, 1] #黒色
          )

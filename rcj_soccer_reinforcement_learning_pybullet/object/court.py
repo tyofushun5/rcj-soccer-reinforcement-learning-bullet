@@ -2,10 +2,18 @@ import abc
 import logging
 import random
 import time
+import os
 
 import numpy as np
 import pybullet as p
 import pybullet_data
+
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+goal_path = os.path.join(script_dir, "goal.stl")
+wall_path = os.path.join(script_dir, "wall.stl")
+line_path = os.path.join(script_dir, "line.stl")
+
 
 class Court(object):
 
@@ -54,14 +62,14 @@ class Court(object):
 
         wall_collision = p.createCollisionShape(
             shapeType=p.GEOM_MESH,
-            fileName="../stl/wall.stl",
+            fileName=wall_path,
             meshScale=[0.001, 0.001, 0.001],
             flags=p.GEOM_FORCE_CONCAVE_TRIMESH
         )
 
         wall_visual = p.createVisualShape(
             shapeType=p.GEOM_MESH,
-            fileName="../stl/wall.stl",
+            fileName=wall_path,
             meshScale=[0.001, 0.001, 0.001],
             rgbaColor=[0.22, 0.22, 0.22, 1]
         )
@@ -76,21 +84,21 @@ class Court(object):
 
         goal_collision = p.createCollisionShape(
             shapeType=p.GEOM_MESH,
-            fileName="../stl/goal.stl",
+            fileName=goal_path,
             meshScale=[0.001, 0.001, 0.001],
             flags=p.GEOM_FORCE_CONCAVE_TRIMESH
         )
 
         blue_goal_visual = p.createVisualShape(
             shapeType=p.GEOM_MESH,
-            fileName="../stl/goal.stl",
+            fileName=goal_path,
             meshScale=[0.001, 0.001, 0.001],
             rgbaColor=[0.2, 0.3, 0.8, 1]
         )
 
         yellow_goal_visual = p.createVisualShape(
             shapeType=p.GEOM_MESH,
-            fileName="../stl/goal.stl",
+            fileName=goal_path,
             meshScale=[0.001, 0.001, 0.001],
             rgbaColor=[0.8, 0.7, 0.2, 1]
         )
@@ -118,7 +126,7 @@ class Court(object):
 
         line_visual = p.createVisualShape(
             shapeType=p.GEOM_MESH,
-            fileName="../stl/line.stl",
+            fileName=line_path,
             meshScale=[0.001, 0.001, 0.001],
             rgbaColor=[1.0, 1.0, 1.0, 1]
         )
