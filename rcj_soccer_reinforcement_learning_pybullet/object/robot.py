@@ -2,7 +2,6 @@ import abc
 import os
 import math
 
-import cv2 as cv
 import pybullet as p
 import numpy as np
 
