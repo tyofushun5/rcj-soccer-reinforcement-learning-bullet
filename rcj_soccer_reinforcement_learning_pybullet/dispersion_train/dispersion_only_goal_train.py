@@ -24,7 +24,9 @@ def make_env():
     return _init
 
 def main():
-    save_dir = "../model"
+    script_dir = os.path.dirname(__file__)
+    parent_dir = os.path.dirname(script_dir)
+    save_dir = os.path.join(parent_dir, "model")
     os.makedirs(save_dir, exist_ok=True)
 
     num_envs = 12
