@@ -45,8 +45,8 @@ class CalculationTool(object):
     @staticmethod
     def vector_calculations(angle_deg, magnitude):
         angle_rad = math.radians(angle_deg)
-        vector_x = magnitude * math.cos(angle_rad)
-        vector_y = magnitude * math.sin(angle_rad)
+        vector_x = magnitude * math.sin(angle_rad)
+        vector_y = magnitude * math.cos(angle_rad)
         return vector_x, vector_y
 
     @staticmethod

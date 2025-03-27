@@ -98,9 +98,9 @@ class OnlyBallGoalEnvironment(gym.Env):
             truncated = True
 
         #print(my_goal_angle, enemy_goal_angle, reward)
-        print("ball",observation)
+        # print("ball",observation)
         #print(reward)
-        print("action",action)
+        # print("action",action)
         print("yaw_deg",yaw_deg)
         return observation, reward, terminated, truncated, info
 

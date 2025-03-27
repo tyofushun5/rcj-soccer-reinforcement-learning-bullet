@@ -37,6 +37,9 @@ class Agent(Robot):
         self.cp = create_position
         self.start_pos = [1+self.cp[0], 0.5+self.cp[1], 0.1+self.cp[2]]
         self.position = self.start_pos
+        self.radius = 0.11  # 半径（メートル）
+        self.height = 0.11  # 高さ（メートル）
+        self.mass = 1.4  # 質量（キログラム）
 
     def create(self, position=None):
          """アタッカーを生成
@@ -47,21 +50,20 @@ class Agent(Robot):
              self.position = self.start_pos
 
          agent_collision = p.createCollisionShape(
-             shapeType=p.GEOM_MESH,
-             fileName=robot_collision_path,
-             meshScale=[0.0001, 0.0001, 0.0001]
+             shapeType=p.GEOM_CYLINDER,
+             radius=self.radius,
+             height=self.height
          )
 
-         #外観設定
          agent_visual = p.createVisualShape(
              shapeType=p.GEOM_MESH,
              fileName=robot_visual_path,
              meshScale=[0.0001, 0.0001, 0.0001],
              rgbaColor=[0.2, 0.2, 0.2, 1] #黒色
          )
-         # 動的ボディとしてオブジェクトを作成
+
          agent_id = p.createMultiBody(
-             baseMass=1.4,
+             baseMass=self.mass,
              baseCollisionShapeIndex=agent_collision,
              baseVisualShapeIndex=agent_visual,
              basePosition=self.position,
@@ -87,8 +89,6 @@ class Agent(Robot):
             rollingFriction=0.3,  # 転がり摩擦
             angularDamping=0.8  # 回転の減衰
         )
-
-        angle_deg = angle_deg - 90
 
         x, y = self.cal.vector_calculations(angle_deg=angle_deg, magnitude=magnitude)
         angular_velocity = self.cal.angular_velocity_calculation(rotate)
