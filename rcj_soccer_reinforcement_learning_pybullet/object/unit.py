@@ -35,8 +35,8 @@ class Unit(object):
         self.hit_ids = self.court.detection_line()
         return self.hit_ids
 
-    def action(self, robot_id, angle_deg, magnitude):
-        self.agent.action(robot_id, angle_deg, magnitude)
+    def action(self, robot_id, angle_deg, rotate, magnitude):
+        self.agent.action(robot_id, angle_deg, rotate, magnitude)
 
     def get_image(self):
         image = self.agent.get_camera_image(self.agent_id)

@@ -5,15 +5,14 @@ from rcj_soccer_reinforcement_learning_pybullet.environment.only_ball_environmen
 
 script_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(script_dir)
-
-save_dir = os.path.join(parent_dir, "model")
+save_dir = os.path.join(parent_dir, "model",'only_goal_model')
 os.makedirs(save_dir, exist_ok=True)
 
 def main():
     # 環境の作成
     env = OnlyBallGoalEnvironment(create_position=[4.0, 0.0, 0.0],
                           max_steps=5000,
-                          magnitude=10.0,
+                          magnitude=0.1,
                           gui=True)
 
     model = RecurrentPPO(
@@ -29,7 +28,6 @@ def main():
     )
 
     model.learn(total_timesteps=5000000)
-
     model.save(os.path.join(save_dir, "only_ball_model_v1"))
 
     env.close()

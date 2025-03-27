@@ -49,14 +49,14 @@ class Agent(Robot):
          agent_collision = p.createCollisionShape(
              shapeType=p.GEOM_MESH,
              fileName=robot_collision_path,
-             meshScale=[0.001, 0.001, 0.001]
+             meshScale=[0.0001, 0.0001, 0.0001]
          )
 
          #外観設定
          agent_visual = p.createVisualShape(
              shapeType=p.GEOM_MESH,
              fileName=robot_visual_path,
-             meshScale=[0.001, 0.001, 0.001],
+             meshScale=[0.0001, 0.0001, 0.0001],
              rgbaColor=[0.2, 0.2, 0.2, 1] #黒色
          )
          # 動的ボディとしてオブジェクトを作成
@@ -65,13 +65,13 @@ class Agent(Robot):
              baseCollisionShapeIndex=agent_collision,
              baseVisualShapeIndex=agent_visual,
              basePosition=self.position,
-             baseOrientation = p.getQuaternionFromEuler([np.pi/2.0, 0.0, np.pi])
+             baseOrientation = p.getQuaternionFromEuler([0.0, 0.0, 0.0])
          )
 
          return agent_id
 
 
-    def action(self, agent_id, angle_deg=0, magnitude=6.8):
+    def action(self, agent_id, angle_deg=0, rotate=0, magnitude=0.1):
         """ロボットを動かすメソッド"""
 
         # Dynamics情報を取得
@@ -88,21 +88,24 @@ class Agent(Robot):
             angularDamping=0.8  # 回転の減衰
         )
 
-        x, y = self.cal.vector_calculations(angle_deg=angle_deg, magnitude=magnitude)
+        angle_deg = angle_deg - 90
 
+        x, y = self.cal.vector_calculations(angle_deg=angle_deg, magnitude=magnitude)
+        angular_velocity = self.cal.angular_velocity_calculation(rotate)
         #中心に力を加える
-        p.applyExternalForce(
-            objectUniqueId=agent_id,
-            linkIndex=-1,
-            forceObj=[x, y, 0],
-            posObj=center_of_mass,
-            flags=p.WORLD_FRAME
-        )
+        # p.applyExternalForce(
+        #     objectUniqueId=agent_id,
+        #     linkIndex=-1,
+        #     forceObj=[x, y, 0.0],
+        #     posObj=center_of_mass,
+        #     flags=p.WORLD_FRAME
+        # )
 
         # 回転速度をリセット
         p.resetBaseVelocity(
             objectUniqueId=agent_id,
-            angularVelocity=[0.0, 0.0, 0.0]  # 回転速度
+            linearVelocity=[x, y, 0.0],
+            angularVelocity=[0.0, 0.0, angular_velocity]
         )
 
     @staticmethod

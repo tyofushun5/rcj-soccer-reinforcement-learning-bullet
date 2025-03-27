@@ -16,14 +16,13 @@ def make_env():
     def _init():
         env = OnlyBallGoalEnvironment(max_steps=10000,
                               create_position=[4.0, 0.0, 0.0],
-                              magnitude=6.8,
+                              magnitude=0.1,
                               gui=False)
         # check_env(env)
         return env
     return _init
 
 def main():
-    os.makedirs(save_dir, exist_ok=True)
 
     num_envs = 12
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
@@ -37,7 +36,7 @@ def main():
                          batch_size=128*num_envs,
                          gamma=0.99)
 
-    model.learn(total_timesteps=50000000)
+    model.learn(total_timesteps=20000000)
     model.save(os.path.join(save_dir, "dispersion_only_goal_model_v1"))
 
     env.close()

@@ -1,5 +1,6 @@
 import math
 
+import numpy as np
 import pybullet as p
 
 class CalculationTool(object):
@@ -47,6 +48,22 @@ class CalculationTool(object):
         vector_x = magnitude * math.cos(angle_rad)
         vector_y = magnitude * math.sin(angle_rad)
         return vector_x, vector_y
+
+    @staticmethod
+    def angular_velocity_calculation(number=0):
+        angular_velocity = 0.0
+        match number:
+            case 0:
+                angular_velocity=0.0
+            case 1:
+                angular_velocity=np.pi/8.0
+            case 2:
+                angular_velocity=-np.pi/8.0
+            case 3:
+                angular_velocity=np.pi/4.0
+            case 4:
+                angular_velocity=-np.pi/4.0
+        return angular_velocity
 
     @staticmethod
     def movement_reward_calculation(reward,

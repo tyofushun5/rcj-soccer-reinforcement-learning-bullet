@@ -26,7 +26,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         p.setGravity(0, 0, -9.81)
         p.loadSDF("stadium.sdf")
 
-        self.action_space = spaces.Discrete(360)
+        self.action_space = spaces.MultiDiscrete([360, 5])
         self.observation_space = spaces.Box(low=-np.inf,
                                             high=np.inf,
                                             shape=(1,),
@@ -55,21 +55,24 @@ class OnlyBallGoalEnvironment(gym.Env):
         if self.step_count % 10 == 0:
             self.unit.get_image()
 
+
         self.unit.action(robot_id=self.unit.agent_id,
-                         angle_deg=action,
+                         angle_deg=action[0],
+                         rotate=action[1],
                          magnitude=self.magnitude)
 
         for _ in range(10):
             p.stepSimulation()
 
-        pos, _ = p.getBasePositionAndOrientation(self.unit.agent_id)
-        fixed_ori = p.getQuaternionFromEuler([np.pi/2.0, 0, np.pi])
-        p.resetBasePositionAndOrientation(self.unit.agent_id,
-                                          pos,
-                                          fixed_ori)
+        # pos, _ = p.getBasePositionAndOrientation(self.unit.agent_id)
+        # fixed_ori = p.getQuaternionFromEuler([np.pi/2.0, 0, np.pi])
+        # p.resetBasePositionAndOrientation(self.unit.agent_id,
+        #                                   pos,
+        #                                   fixed_ori)
 
-        agent_pos, _ = p.getBasePositionAndOrientation(self.unit.agent_id)
-
+        agent_pos, agent_ori = p.getBasePositionAndOrientation(self.unit.agent_id)
+        euler = p.getEulerFromQuaternion(agent_ori)
+        yaw_deg = math.degrees(euler[2])
         ball_angle = self.cal.angle_calculation_id(self.unit.agent_id,
                                                    self.unit.ball_id)
         ball_angle = round(ball_angle, 2)
@@ -95,8 +98,10 @@ class OnlyBallGoalEnvironment(gym.Env):
             truncated = True
 
         #print(my_goal_angle, enemy_goal_angle, reward)
-        #print(observation)
+        print("ball",observation)
         #print(reward)
+        print("action",action)
+        print("yaw_deg",yaw_deg)
         return observation, reward, terminated, truncated, info
 
     def reset(self, seed=None, options=None):
@@ -108,7 +113,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         if seed is not None:
             np.random.seed(seed)
 
-        min_distance = 0.15
+        min_distance = 0.10
 
         while True:
             self.agent_random_pos[0] = random.uniform(0.4, 1.5) + self.cp[0]
