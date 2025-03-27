@@ -73,6 +73,9 @@ class OnlyBallGoalEnvironment(gym.Env):
         agent_pos, agent_ori = p.getBasePositionAndOrientation(self.unit.agent_id)
         euler = p.getEulerFromQuaternion(agent_ori)
         yaw_deg = math.degrees(euler[2])
+        yaw_deg_from_y_axis = (yaw_deg) % 360
+
+
         ball_angle = self.cal.angle_calculation_id(self.unit.agent_id,
                                                    self.unit.ball_id)
         ball_angle = round(ball_angle, 2)
@@ -101,7 +104,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         # print("ball",observation)
         #print(reward)
         # print("action",action)
-        print("yaw_deg",yaw_deg)
+        print("yaw_deg",yaw_deg_from_y_axis)
         return observation, reward, terminated, truncated, info
 
     def reset(self, seed=None, options=None):
