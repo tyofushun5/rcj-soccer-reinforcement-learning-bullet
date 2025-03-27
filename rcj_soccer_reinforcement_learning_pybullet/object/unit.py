@@ -20,13 +20,13 @@ class Unit(object):
         self.past_distance = 0
         self.ball_past_distance = 0
 
-    def create_unit(self, create_position, agent_pos):
+    def create_unit(self, create_position, agent_pos, ball_pos):
         self.cp = create_position
         self.court = Court(self.cp)
         self.agent = Agent(self.cp)
         self.wall_id, self.blue_goal_id, self.yellow_goal_id = self.court.create_court()
         self.court.create_court_line()
-        self.ball_id = self.court.create_ball()
+        self.ball_id = self.court.create_ball(ball_pos)
         self.agent_id = self.agent.create(agent_pos)
         self.previous_agent_pos = self.agent.start_pos
         Unit.set_camera(self.cp)

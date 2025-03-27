@@ -52,6 +52,8 @@ class Court(object):
         self.hit_ids = []
         self.my_goal_position = [0.93+self.cp[0], 0.11+self.cp[1], 0.05]
         self.enemy_goal_position = [0.93+self.cp[0], 2.32+self.cp[1], 0.05]
+        self.ball_start_position = [0.915+self.cp[0], 1.8+self.cp[1], 0.1+self.cp[2]]
+        self.ball_position = self.ball_start_position
 
     @property
     def my_goal_line_idx(self):
@@ -206,7 +208,13 @@ class Court(object):
 
         return self.hit_ids
 
-    def create_ball(self):
+    def create_ball(self, position=None):
+
+        self.ball_position = position
+
+        if position is None:
+            self.ball_position = self.ball_start_position
+
         collision_shape_id = p.createCollisionShape(p.GEOM_SPHERE,
                                                     radius=0.037)
 
@@ -218,7 +226,7 @@ class Court(object):
             baseMass=0.1,
             baseCollisionShapeIndex=collision_shape_id,
             baseVisualShapeIndex=visual_shape_id,
-            basePosition=[0.915+self.cp[0], 1.8+self.cp[1], 0.1+self.cp[2]]
+            basePosition=self.ball_position
         )
         return ball_id
 

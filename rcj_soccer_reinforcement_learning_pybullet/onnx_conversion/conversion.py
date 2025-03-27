@@ -1,45 +1,73 @@
 import os
 import torch
 import onnx
-from stable_baselines3 import PPO
+from sb3_contrib import RecurrentPPO
 
-# 1. Stable-Baselines3 で事前学習済みモデルをロード
-model_path = os.path.join("model", "RCJ_ppo_model_v1.zip")
-ppo_model = PPO.load(model_path)
+script_dir = os.path.dirname(__file__)
+parent_dir = os.path.dirname(script_dir)
+model_path = os.path.join(parent_dir, "model", "goal_model", "dispersion_goal_model_v1")
+model = RecurrentPPO.load(model_path)
+policy = model.policy
 
-# 2. ポリシー部分を抽出 (PyTorch ベース)
-policy = ppo_model.policy
+# ダミー入力の準備
+batch_size = 1
+seq_len = 1  # ONNXでは1ステップ分として扱う
 
-# 3. ONNX にエクスポートするためのダミー入力生成
-# 環境に応じた観測空間の形状を使用
-dummy_input = torch.randn(1, *ppo_model.observation_space.shape)
+obs_shape = model.observation_space.shape
+dummy_obs = torch.randn(seq_len, batch_size, *obs_shape)
 
-# 4. PyTorch モデルを ONNX に変換
-onnx_model_path = "ppo_model.onnx"
+if hasattr(policy, "lstm"):
+    lstm_module = policy.lstm
+elif hasattr(policy, "recurrent_net"):
+    lstm_module = policy.recurrent_net
+else:
+    raise AttributeError("LSTMモジュールが見つかりません。policy.lstm または policy.recurrent_net を確認してください。")
+
+num_layers = lstm_module.num_layers
+hidden_size = lstm_module.hidden_size
+device = next(policy.parameters()).device
+
+h0 = torch.zeros(num_layers, batch_size, hidden_size, device=device)
+c0 = torch.zeros(num_layers, batch_size, hidden_size, device=device)
+dummy_hidden = torch.cat([h0, c0], dim=0)  # ONNXエクスポート用に連結
+
+# episode_starts（マスク）の準備
+dummy_masks = torch.ones(seq_len, batch_size)
+
+# ONNXエクスポート用のラッパー関数
+class RecurrentPolicyWrapper(torch.nn.Module):
+    def __init__(self, policy):
+        super().__init__()
+        self.policy = policy
+
+    def forward(self, obs, lstm_state, mask):
+        # 連結された lstm_state を (h, c) に分割
+        hidden_dim = lstm_state.size(0) // 2
+        h, c = lstm_state[:hidden_dim], lstm_state[hidden_dim:]
+        lstm_states = (h, c)
+
+        # ポリシー実行
+        action, _, _, _ = self.policy(obs, lstm_states, mask)
+        return action
+
+# ラップしてONNX形式に変換
+wrapper = RecurrentPolicyWrapper(policy)
+onnx_model_path = "recurrent_model.onnx"
+
+# 入力の準備（ラッパーの引数に合わせて順番を設定）
 torch.onnx.export(
-    policy,
-    dummy_input,
+    wrapper,
+    (dummy_obs, dummy_hidden, dummy_masks),
     onnx_model_path,
     export_params=True,
-    opset_version=11,  # ONNX opset のバージョン指定
+    opset_version=11,
     do_constant_folding=True,
-    input_names=["input"],
-    output_names=["output"],
-    dynamic_axes={"input": {0: "batch_size"}, "output": {0: "batch_size"}},
+    input_names=["obs", "lstm_state", "mask"],
+    output_names=["action"],
+    dynamic_axes={
+        "obs": {0: "seq_len", 1: "batch_size"},
+        "lstm_state": {1: "batch_size"},
+        "mask": {0: "seq_len", 1: "batch_size"},
+        "action": {0: "seq_len", 1: "batch_size"},
+    },
 )
-
-print(f"モデルが ONNX ファイルとして保存されました: {onnx_model_path}")
-
-# 5. ONNX の動作確認 (optional)
-import onnxruntime as ort
-
-onnx_session = ort.InferenceSession(onnx_model_path)
-
-# ONNX モデルの推論をテスト
-input_name = onnx_session.get_inputs()[0].name
-output_name = onnx_session.get_outputs()[0].name
-onnx_result = onnx_session.run(
-    [output_name], {input_name: dummy_input.numpy()}
-)
-
-print(f"ONNX 推論結果: {onnx_result}")

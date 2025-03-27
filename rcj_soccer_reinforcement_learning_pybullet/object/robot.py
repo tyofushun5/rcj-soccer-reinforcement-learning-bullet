@@ -154,7 +154,7 @@ class Agent(Robot):
                                            height,
                                            view_matrix,
                                            projection_matrix,
-                                           renderer=p.ER_TINY_RENDERER)
+                                           renderer=p.ER_BULLET_HARDWARE_OPENGL)
 
         rgb_array = np.reshape(rgb, (height, width, 4))
         rgb_image = rgb_array[:, :, :3].astype(np.uint8)
