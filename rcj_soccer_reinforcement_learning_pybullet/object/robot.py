@@ -71,7 +71,7 @@ class Agent(Robot):
          return agent_id
 
 
-    def action(self, agent_id, angle_deg=0, magnitude=7.0):
+    def action(self, agent_id, angle_deg=0, magnitude=10.0):
         """ロボットを動かすメソッド"""
 
         # Dynamics情報を取得

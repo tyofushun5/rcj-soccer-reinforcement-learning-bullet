@@ -22,7 +22,7 @@ def make_env():
     def _init():
         env = GoalEnvironment(max_steps=10000,
                                create_position=[4.0, 0.0, 0.0],
-                               magnitude=9.0,
+                               magnitude=3.0,
                                gui=False)
         # check_env(env)
         return env

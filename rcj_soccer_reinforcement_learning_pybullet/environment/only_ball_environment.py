@@ -1,4 +1,5 @@
 import random
+import math
 
 import gymnasium as gym
 import numpy as np
@@ -34,8 +35,9 @@ class OnlyBallGoalEnvironment(gym.Env):
         self.cal = CalculationTool()
         self.reward_cal = OnlyBallRewardCalculation()
         self.cp = create_position
+        self.ball_random_pos = [0.915+self.cp[0], 1.8+self.cp[1], 0.1+self.cp[2]]
         self.agent_random_pos = [1+self.cp[0], 0.5+self.cp[1], 0.1+self.cp[2]]
-        self.unit.create_unit(self.cp, self.agent_random_pos)
+        self.unit.create_unit(self.cp, self.agent_random_pos, self.ball_random_pos)
 
         self.hit_ids = []
         self.max_steps = max_steps
@@ -106,11 +108,24 @@ class OnlyBallGoalEnvironment(gym.Env):
         if seed is not None:
             np.random.seed(seed)
 
-        self.agent_random_pos[0] = random.uniform(0.4, 1.5) + self.cp[0]
-        self.agent_random_pos[1] = random.uniform(0.4, 1.5) + self.cp[1]
+        min_distance = 0.15
+
+        while True:
+            self.agent_random_pos[0] = random.uniform(0.4, 1.5) + self.cp[0]
+            self.agent_random_pos[1] = random.uniform(0.4, 1.5) + self.cp[1]
+
+            self.ball_random_pos[0] = random.uniform(0.4, 1.5) + self.cp[0]
+            self.ball_random_pos[1] = random.uniform(0.4, 1.5) + self.cp[1]
+
+            dx = self.agent_random_pos[0] - self.ball_random_pos[0]
+            dy = self.agent_random_pos[1] - self.ball_random_pos[1]
+            distance = math.sqrt(dx**2 + dy**2)
+
+            if distance >= min_distance:
+                break
 
         self.unit = Unit()
-        self.unit.create_unit(self.cp, self.agent_random_pos)
+        self.unit.create_unit(self.cp, self.agent_random_pos, self.ball_random_pos)
 
         self.step_count = 0
         initial_obs = np.array([0.0], dtype=np.float32)

@@ -4,7 +4,9 @@ import time
 from sb3_contrib import RecurrentPPO
 from rcj_soccer_reinforcement_learning_pybullet.environment.only_ball_environment import OnlyBallGoalEnvironment
 
-save_dir = "../model"
+script_dir = os.path.dirname(__file__)
+parent_dir = os.path.dirname(script_dir)
+save_dir = os.path.join(parent_dir, "model",'only_goal_model')
 
 def main():
     preview_env = OnlyBallGoalEnvironment(max_steps=10000,
@@ -12,7 +14,7 @@ def main():
                                   magnitude=10.0,
                                   gui=True)
 
-    model_path = os.path.join(save_dir, "dispersion_only_goal_model_v1")
+    model_path = os.path.join(save_dir, "dispersion_only_goal_model_v2")
     loaded_model = RecurrentPPO.load(model_path, env=preview_env)
 
     observation, info = preview_env.reset()

@@ -12,7 +12,7 @@ def main():
     # 環境の作成
     env = GoalEnvironment(create_position=[4.0, 0.0, 0.0],
                           max_steps=5000,
-                          magnitude=10.0,
+                          magnitude=3.0,
                           gui=True)
 
     model = RecurrentPPO(

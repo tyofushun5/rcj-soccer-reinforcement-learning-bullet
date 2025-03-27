@@ -7,26 +7,22 @@ from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.callbacks import CheckpointCallback
 
 
-checkpoint_callback = CheckpointCallback(save_freq=100000,
-                                         save_path='../model',
-                                         name_prefix='RCJ_ppo_model',
-                                         save_replay_buffer=True,
-                                         save_vecnormalize=True)
+script_dir = os.path.dirname(__file__)
+parent_dir = os.path.dirname(script_dir)
+save_dir = os.path.join(parent_dir, "model",'only_goal_model')
+os.makedirs(save_dir, exist_ok=True)
 
 def make_env():
     def _init():
-        env = OnlyBallGoalEnvironment(max_steps=5000,
+        env = OnlyBallGoalEnvironment(max_steps=10000,
                               create_position=[4.0, 0.0, 0.0],
-                              magnitude=9.0,
+                              magnitude=3.0,
                               gui=False)
         # check_env(env)
         return env
     return _init
 
 def main():
-    script_dir = os.path.dirname(__file__)
-    parent_dir = os.path.dirname(script_dir)
-    save_dir = os.path.join(parent_dir, "model")
     os.makedirs(save_dir, exist_ok=True)
 
     num_envs = 12
@@ -41,8 +37,8 @@ def main():
                          batch_size=128*num_envs,
                          gamma=0.99)
 
-    model.learn(total_timesteps=1000000)
-    model.save(os.path.join(save_dir, "dispersion_only_goal_model_v2"))
+    model.learn(total_timesteps=50000000)
+    model.save(os.path.join(save_dir, "dispersion_only_goal_model_v3"))
 
     env.close()
 
