@@ -71,7 +71,7 @@ class Agent(Robot):
          return agent_id
 
 
-    def action(self, agent_id, angle_deg=0, magnitude=10.0):
+    def action(self, agent_id, angle_deg=0, magnitude=6.8):
         """ロボットを動かすメソッド"""
 
         # Dynamics情報を取得
@@ -82,10 +82,10 @@ class Agent(Robot):
         p.changeDynamics(
             bodyUniqueId=agent_id,
             linkIndex=-1,
-            lateralFriction=0.5,  # 摩擦係数
-            spinningFriction=0.1,  # 回転摩擦
-            rollingFriction=0.1,  # 転がり摩擦
-            angularDamping=1.0  # 回転の減衰
+            lateralFriction=1.2,  # 摩擦係数
+            spinningFriction=0.2,  # 回転摩擦
+            rollingFriction=0.3,  # 転がり摩擦
+            angularDamping=0.8  # 回転の減衰
         )
 
         x, y = self.cal.vector_calculations(angle_deg=angle_deg, magnitude=magnitude)

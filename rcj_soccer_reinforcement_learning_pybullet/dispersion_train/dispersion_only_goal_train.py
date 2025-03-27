@@ -16,7 +16,7 @@ def make_env():
     def _init():
         env = OnlyBallGoalEnvironment(max_steps=10000,
                               create_position=[4.0, 0.0, 0.0],
-                              magnitude=3.0,
+                              magnitude=6.8,
                               gui=False)
         # check_env(env)
         return env
@@ -38,7 +38,7 @@ def main():
                          gamma=0.99)
 
     model.learn(total_timesteps=50000000)
-    model.save(os.path.join(save_dir, "dispersion_only_goal_model_v3"))
+    model.save(os.path.join(save_dir, "dispersion_only_goal_model_v1"))
 
     env.close()
 

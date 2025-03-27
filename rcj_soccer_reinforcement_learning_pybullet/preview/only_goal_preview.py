@@ -11,10 +11,10 @@ save_dir = os.path.join(parent_dir, "model",'only_goal_model')
 def main():
     preview_env = OnlyBallGoalEnvironment(max_steps=10000,
                                   create_position=[4.0, 0.0, 0.0],
-                                  magnitude=10.0,
+                                  magnitude=6.8,
                                   gui=True)
 
-    model_path = os.path.join(save_dir, "dispersion_only_goal_model_v2")
+    model_path = os.path.join(save_dir, "dispersion_only_goal_model_v1")
     loaded_model = RecurrentPPO.load(model_path, env=preview_env)
 
     observation, info = preview_env.reset()
