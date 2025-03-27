@@ -45,7 +45,7 @@ class GoalRewardCalculation(object):
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 3.0
+            reward += 2.0
             self.is_touch = True
         else:
             reward -= 0.3
@@ -69,6 +69,8 @@ class GoalRewardCalculation(object):
             reward -= 0.5
         if p.getContactPoints(yellow_goal_id, agent_id):
             reward -= 0.5
+        if p.getContactPoints(wall_id, ball_id):
+            reward -= 0.1
         for i in range(len(hit_ids)):
             if hit_ids[i] == agent_id:
                 reward -= 0.1
@@ -78,7 +80,7 @@ class GoalRewardCalculation(object):
         else:
             reward -= 0.2
         if angle<=45 or angle>=315:
-            reward += 0.1
+            reward += 0.2
         else:
             reward -= 0.1
         return reward
