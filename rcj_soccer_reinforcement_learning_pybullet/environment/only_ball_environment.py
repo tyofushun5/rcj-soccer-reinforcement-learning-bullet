@@ -29,7 +29,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         self.action_space = spaces.MultiDiscrete([360, 3])
         self.observation_space = spaces.Box(low=-np.inf,
                                             high=np.inf,
-                                            shape=(2,),
+                                            shape=(3,),
                                             dtype=np.float32)
         self.unit = Unit()
         self.cal = CalculationTool()
@@ -43,6 +43,8 @@ class OnlyBallGoalEnvironment(gym.Env):
         self.max_steps = max_steps
         self.magnitude = magnitude
         self.step_count = 0
+
+        self.is_online_obs = 0
 
         self.reset()
 
@@ -106,8 +108,12 @@ class OnlyBallGoalEnvironment(gym.Env):
                                                     self.unit.blue_goal_id,
                                                     self.unit.yellow_goal_id,
                                                     self.step_count)
+        if self.reward_cal.is_online:
+            self.is_online_obs = 1
+        else:
+            self.is_online_obs = 0
 
-        observation = np.array([ball_angle, enemy_goal_angle],dtype=np.float32)
+        observation = np.array([ball_angle, enemy_goal_angle, self.is_online_obs],dtype=np.float32)
 
         if self.reward_cal.is_goal:
             terminated = True
@@ -124,6 +130,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         #print("action",action)
         #print(ball_angle,yaw_deg_from_y_axis)
         #print(enemy_goal_angle)
+        #print(self.is_online_obs)
         return observation, reward, terminated, truncated, info
 
     def reset(self, seed=None, options=None):
@@ -155,7 +162,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         self.unit.create_unit(self.cp, self.agent_random_pos, self.ball_random_pos)
 
         self.step_count = 0
-        initial_obs = np.array([0.0, 0.0], dtype=np.float32)
+        initial_obs = np.array([0.0, 0.0, 0.0], dtype=np.float32)
         info = {}
         return initial_obs, info
 

@@ -13,12 +13,14 @@ class OnlyBallRewardCalculation(object):
         self.is_goal = False
         self.is_out = False
         self.is_touch = False
+        self.is_online = False
         self.cal = CalculationTool()
 
     def reward_calculation(self, hit_ids, agent_id, ball_id, wall_id, blue_goal_id, yellow_goal_id, step_count):
         reward = 0
         self.is_goal = False
         self.is_out = False
+        self.is_online = False
 
         # reward -= step_count*0.001
 
@@ -74,7 +76,10 @@ class OnlyBallRewardCalculation(object):
         for i in range(len(hit_ids)):
             if hit_ids[i] == agent_id:
                 reward -= 0.1
+                self.is_online = True
+
         angle = self.cal.angle_calculation_id(agent_id, ball_id)
+
         if angle<=90 or angle>=270:
             reward += 0.3
         else:
