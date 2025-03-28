@@ -29,7 +29,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         self.action_space = spaces.MultiDiscrete([360, 3])
         self.observation_space = spaces.Box(low=-np.inf,
                                             high=np.inf,
-                                            shape=(1,),
+                                            shape=(2,),
                                             dtype=np.float32)
         self.unit = Unit()
         self.cal = CalculationTool()
@@ -73,12 +73,30 @@ class OnlyBallGoalEnvironment(gym.Env):
 
         ball_angle = self.cal.angle_calculation_id(self.unit.agent_id,
                                                    self.unit.ball_id)
+
+        enemy_goal_angle = self.cal.angle_calculation_pos(agent_pos,
+                                                          self.unit.court.enemy_goal_position)
+
+        my_goal_angle = self.cal.angle_calculation_pos(agent_pos,
+                                                       self.unit.court.my_goal_position)
+
         ball_angle = ball_angle - yaw_deg_from_y_axis
+        my_goal_angle = my_goal_angle - yaw_deg_from_y_axis
+        enemy_goal_angle = enemy_goal_angle - yaw_deg_from_y_axis
 
         if ball_angle < 0:
             ball_angle = ball_angle + 360
 
+        if my_goal_angle < 0:
+            my_goal_angle = my_goal_angle + 360
+
+        if enemy_goal_angle < 0:
+            enemy_goal_angle = enemy_goal_angle + 360
+
+
         ball_angle = round(ball_angle, 2)
+        my_goal_angle = round(my_goal_angle, 2)
+        enemy_goal_angle = round(enemy_goal_angle, 2)
 
         self.hit_ids = self.unit.detection_line()
         reward = self.reward_cal.reward_calculation(self.hit_ids,
@@ -89,7 +107,7 @@ class OnlyBallGoalEnvironment(gym.Env):
                                                     self.unit.yellow_goal_id,
                                                     self.step_count)
 
-        observation = np.array([ball_angle],dtype=np.float32)
+        observation = np.array([ball_angle, enemy_goal_angle],dtype=np.float32)
 
         if self.reward_cal.is_goal:
             terminated = True
@@ -104,7 +122,8 @@ class OnlyBallGoalEnvironment(gym.Env):
         #print("ball",observation)
         #print(reward)
         #print("action",action)
-        # print(ball_angle,yaw_deg_from_y_axis)
+        #print(ball_angle,yaw_deg_from_y_axis)
+        #print(enemy_goal_angle)
         return observation, reward, terminated, truncated, info
 
     def reset(self, seed=None, options=None):
@@ -136,7 +155,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         self.unit.create_unit(self.cp, self.agent_random_pos, self.ball_random_pos)
 
         self.step_count = 0
-        initial_obs = np.array([0.0], dtype=np.float32)
+        initial_obs = np.array([0.0, 0.0], dtype=np.float32)
         info = {}
         return initial_obs, info
 
