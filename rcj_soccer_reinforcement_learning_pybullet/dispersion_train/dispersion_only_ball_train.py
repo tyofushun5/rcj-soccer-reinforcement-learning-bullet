@@ -36,7 +36,7 @@ def main():
                          batch_size=128*num_envs,
                          gamma=0.99)
 
-    model.learn(total_timesteps=20000000)
+    model.learn(total_timesteps=10000000)
     model.save(os.path.join(save_dir, "dispersion_only_goal_model_v1"))
 
     env.close()
