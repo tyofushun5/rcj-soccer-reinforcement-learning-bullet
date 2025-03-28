@@ -52,8 +52,8 @@ class OnlyBallGoalEnvironment(gym.Env):
         info = {}
         self.step_count += 1
 
-        if self.step_count % 10 == 0:
-            self.unit.get_image()
+        # if self.step_count % 10 == 0:
+        #     self.unit.get_image()
 
 
         self.unit.action(robot_id=self.unit.agent_id,
@@ -73,7 +73,8 @@ class OnlyBallGoalEnvironment(gym.Env):
         agent_pos, agent_ori = p.getBasePositionAndOrientation(self.unit.agent_id)
         euler = p.getEulerFromQuaternion(agent_ori)
         yaw_deg = math.degrees(euler[2])
-        yaw_deg_from_y_axis = (yaw_deg) % 360
+        yaw_deg = (yaw_deg + 360) % 360
+        yaw_deg_from_y_axis = ((90-yaw_deg)-90) % 360
 
 
         ball_angle = self.cal.angle_calculation_id(self.unit.agent_id,
@@ -101,10 +102,10 @@ class OnlyBallGoalEnvironment(gym.Env):
             truncated = True
 
         #print(my_goal_angle, enemy_goal_angle, reward)
-        # print("ball",observation)
+        #print("ball",observation)
         #print(reward)
-        # print("action",action)
-        print("yaw_deg",yaw_deg_from_y_axis)
+        #print("action",action)
+        # print(ball_angle,yaw_deg_from_y_axis)
         return observation, reward, terminated, truncated, info
 
     def reset(self, seed=None, options=None):

@@ -12,7 +12,7 @@ def main():
     # 環境の作成
     env = OnlyBallGoalEnvironment(create_position=[4.0, 0.0, 0.0],
                           max_steps=5000,
-                          magnitude=0.1,
+                          magnitude=21.0,
                           gui=True)
 
     model = RecurrentPPO(
