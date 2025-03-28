@@ -47,7 +47,7 @@ class OnlyBallRewardCalculation(object):
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 0.6
+            reward += 3.0
             self.is_touch = True
         else:
             reward -= 0.3
@@ -75,7 +75,7 @@ class OnlyBallRewardCalculation(object):
             reward -= 0.1
         for i in range(len(hit_ids)):
             if hit_ids[i] == agent_id:
-                reward -= 0.2
+                reward -= 0.1
                 self.is_online = True
 
         angle = self.cal.angle_calculation_id(agent_id, ball_id)
