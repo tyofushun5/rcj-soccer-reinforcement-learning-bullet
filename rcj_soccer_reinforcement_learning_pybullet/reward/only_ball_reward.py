@@ -45,7 +45,7 @@ class OnlyBallRewardCalculation(object):
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 3.0
+            reward += 1.5
             self.is_touch = True
         else:
             reward -= 0.3

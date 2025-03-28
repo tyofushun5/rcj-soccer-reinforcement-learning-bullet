@@ -16,7 +16,7 @@ def make_env():
     def _init():
         env = OnlyBallGoalEnvironment(max_steps=10000,
                               create_position=[4.0, 0.0, 0.0],
-                              magnitude=0.1,
+                              magnitude=21.0,
                               gui=False)
         # check_env(env)
         return env

@@ -56,13 +56,9 @@ class CalculationTool(object):
             case 0:
                 angular_velocity=0.0
             case 1:
-                angular_velocity=np.pi/8.0
+                angular_velocity=0.5
             case 2:
-                angular_velocity=-np.pi/8.0
-            case 3:
-                angular_velocity=np.pi/4.0
-            case 4:
-                angular_velocity=-np.pi/4.0
+                angular_velocity=-0.5
         return angular_velocity
 
     @staticmethod

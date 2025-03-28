@@ -26,7 +26,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         p.setGravity(0, 0, -9.81)
         p.loadSDF("stadium.sdf")
 
-        self.action_space = spaces.MultiDiscrete([360, 5])
+        self.action_space = spaces.MultiDiscrete([360, 3])
         self.observation_space = spaces.Box(low=-np.inf,
                                             high=np.inf,
                                             shape=(1,),
@@ -64,12 +64,6 @@ class OnlyBallGoalEnvironment(gym.Env):
         for _ in range(10):
             p.stepSimulation()
 
-        # pos, _ = p.getBasePositionAndOrientation(self.unit.agent_id)
-        # fixed_ori = p.getQuaternionFromEuler([np.pi/2.0, 0, np.pi])
-        # p.resetBasePositionAndOrientation(self.unit.agent_id,
-        #                                   pos,
-        #                                   fixed_ori)
-
         agent_pos, agent_ori = p.getBasePositionAndOrientation(self.unit.agent_id)
         euler = p.getEulerFromQuaternion(agent_ori)
         yaw_deg = math.degrees(euler[2])
@@ -79,6 +73,11 @@ class OnlyBallGoalEnvironment(gym.Env):
 
         ball_angle = self.cal.angle_calculation_id(self.unit.agent_id,
                                                    self.unit.ball_id)
+        ball_angle = ball_angle - yaw_deg_from_y_axis
+
+        if ball_angle < 0:
+            ball_angle = ball_angle + 360
+
         ball_angle = round(ball_angle, 2)
 
         self.hit_ids = self.unit.detection_line()
@@ -117,7 +116,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         if seed is not None:
             np.random.seed(seed)
 
-        min_distance = 0.10
+        min_distance = 0.15
 
         while True:
             self.agent_random_pos[0] = random.uniform(0.4, 1.5) + self.cp[0]

@@ -11,7 +11,7 @@ os.makedirs(save_dir, exist_ok=True)
 def main():
     # 環境の作成
     env = OnlyBallGoalEnvironment(create_position=[4.0, 0.0, 0.0],
-                          max_steps=5000,
+                          max_steps=10000,
                           magnitude=21.0,
                           gui=True)
 

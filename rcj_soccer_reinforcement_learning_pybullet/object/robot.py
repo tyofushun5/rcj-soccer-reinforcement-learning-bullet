@@ -49,20 +49,27 @@ class Agent(Robot):
          if position is None:
              self.position = self.start_pos
 
+
          agent_collision = p.createCollisionShape(
-             shapeType=p.GEOM_CYLINDER,
-             radius=self.radius,
-             height=self.height
+             shapeType=p.GEOM_MESH,
+             fileName=robot_collision_path,
+             meshScale=[0.0001, 0.0001, 0.0001]
          )
 
-         visual_shift = [0, 0, -self.height / 2]
+         # agent_collision = p.createCollisionShape(
+         #     shapeType=p.GEOM_CYLINDER,
+         #     radius=self.radius,
+         #     height=self.height
+         # )
+
+         # visual_shift = [0, 0, -self.height / 2]
 
          agent_visual = p.createVisualShape(
              shapeType=p.GEOM_MESH,
              fileName=robot_visual_path,
              meshScale=[0.0001, 0.0001, 0.0001],
              rgbaColor=[0.2, 0.2, 0.2, 1],
-             visualFramePosition=visual_shift
+             # visualFramePosition=visual_shift
          )
 
          agent_id = p.createMultiBody(
@@ -79,18 +86,17 @@ class Agent(Robot):
     def action(self, agent_id, angle_deg=0, rotate=0, magnitude=21.0):
         """ロボットを動かすメソッド"""
 
-        # Dynamics情報を取得
         dynamics_info = p.getDynamicsInfo(agent_id, -1)
-        center_of_mass = dynamics_info[3]  # 重心の位置
+        center_of_mass = dynamics_info[3]  # 重心
 
 
         p.changeDynamics(
             bodyUniqueId=agent_id,
             linkIndex=-1,
-            lateralFriction=0.315,  # 摩擦係数
-            spinningFriction=0.10,  # 回転摩擦
+            lateralFriction=0.32,  # 摩擦係数
+            spinningFriction=0.01,  # 回転摩擦
             rollingFriction=0.10,  # 転がり摩擦
-            angularDamping=0.8  # 回転の減衰
+            angularDamping=0.5  # 回転の減衰
         )
 
         x, y = self.cal.vector_calculations(angle_deg=angle_deg, magnitude=magnitude)
@@ -104,11 +110,12 @@ class Agent(Robot):
             flags=p.LINK_FRAME
         )
 
-        # p.resetBaseVelocity(
-        #     objectUniqueId=agent_id,
-        #     linearVelocity=[x, y, 0.0],
-        #     angularVelocity=[0.0, 0.0, angular_velocity]
-        # )
+        p.applyExternalTorque(
+            objectUniqueId=agent_id,
+            linkIndex=-1,
+            torqueObj=[0.0, 0.0, angular_velocity],
+            flags=p.LINK_FRAME
+        )
 
     @staticmethod
     def get_camera_image(robot_id, width=84, height=84):
