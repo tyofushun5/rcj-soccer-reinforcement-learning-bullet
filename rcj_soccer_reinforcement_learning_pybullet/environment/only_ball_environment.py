@@ -14,7 +14,6 @@ from rcj_soccer_reinforcement_learning_pybullet.reward.only_ball_reward import O
 class OnlyBallGoalEnvironment(gym.Env):
     def __init__(self, create_position, max_steps, magnitude, gui=False):
         super().__init__()
-        # PyBulletの初期化
         if gui:
             self.physicsClient = p.connect(p.GUI)
         else:

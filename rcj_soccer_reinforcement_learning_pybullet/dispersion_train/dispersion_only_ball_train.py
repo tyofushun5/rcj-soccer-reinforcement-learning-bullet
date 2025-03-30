@@ -23,7 +23,7 @@ def make_env():
 
 def main():
 
-    num_envs = 16
+    num_envs = 12
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     model = RecurrentPPO("MlpLstmPolicy",
@@ -31,11 +31,11 @@ def main():
                          device="cuda",
                          verbose=1,
                          n_epochs=10,
-                         n_steps=128,
-                         batch_size=128*num_envs,
+                         n_steps=256,
+                         batch_size=256*num_envs,
                          gamma=0.99)
 
-    model.learn(total_timesteps=20000000)
+    model.learn(total_timesteps=10000000)
     model.save(os.path.join(save_dir, "dispersion_only_goal_model_v1"))
 
     env.close()
