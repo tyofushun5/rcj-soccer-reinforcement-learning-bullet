@@ -29,7 +29,7 @@ def main():
         )
 
         observation, reward, terminated, truncated, info = preview_env.step(action)
-        print(reward)
+
         episode_start = terminated or truncated
         if episode_start:
             observation, info = preview_env.reset()

@@ -13,7 +13,7 @@ os.makedirs(save_dir, exist_ok=True)
 
 def make_env():
     def _init():
-        env = Environment(max_steps=10000,
+        env = Environment(max_steps=5000,
                               create_position=[4.0, 0.0, 0.0],
                               magnitude=21.0,
                               gui=False)
@@ -35,7 +35,7 @@ def main():
                          batch_size=256*num_envs,
                          gamma=0.99)
 
-    model.learn(total_timesteps=50000000)
+    model.learn(total_timesteps=10000000)
     model.save(os.path.join(save_dir, 'default_model_v1'))
 
     env.close()
