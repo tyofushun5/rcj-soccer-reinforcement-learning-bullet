@@ -9,9 +9,9 @@ from gymnasium import spaces
 
 from rcj_soccer_reinforcement_learning_pybullet.object.unit import Unit
 from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tools import CalculationTool
-from rcj_soccer_reinforcement_learning_pybullet.reward.only_ball_reward import OnlyBallRewardCalculation
+from rcj_soccer_reinforcement_learning_pybullet.reward_function.reward_function import RewardFunction
 
-class OnlyBallGoalEnvironment(gym.Env):
+class Environment(gym.Env):
     def __init__(self, create_position, max_steps, magnitude, gui=False):
         super().__init__()
         if gui:
@@ -20,10 +20,13 @@ class OnlyBallGoalEnvironment(gym.Env):
             self.physicsClient = p.connect(p.DIRECT)
 
         p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
-        p.resetDebugVisualizerCamera(cameraDistance=1.5, cameraYaw=50, cameraPitch=-35, cameraTargetPosition=[0, 0, 0])
+        p.resetDebugVisualizerCamera(cameraDistance=1.5,
+                                     cameraYaw=50,
+                                     cameraPitch=-35,
+                                     cameraTargetPosition=[0, 0, 0])
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.setGravity(0, 0, -9.81)
-        p.loadSDF("stadium.sdf")
+        p.loadSDF('stadium.sdf')
 
         self.action_space = spaces.MultiDiscrete([360, 3])
         self.observation_space = spaces.Box(low=-np.inf,
@@ -32,7 +35,7 @@ class OnlyBallGoalEnvironment(gym.Env):
                                             dtype=np.float32)
         self.unit = Unit()
         self.cal = CalculationTool()
-        self.reward_cal = OnlyBallRewardCalculation()
+        self.reward_cal = RewardFunction()
         self.cp = create_position
         self.ball_random_pos = [0.915+self.cp[0], 1.8+self.cp[1], 0.1+self.cp[2]]
         self.agent_random_pos = [1+self.cp[0], 0.5+self.cp[1], 0.1+self.cp[2]]
@@ -123,9 +126,9 @@ class OnlyBallGoalEnvironment(gym.Env):
         if  self.reward_cal.is_out:
             truncated = True
 
-        #print(my_goal_angle, enemy_goal_angle, reward)
+        #print(my_goal_angle, enemy_goal_angle, reward_function)
         #print("ball",observation)
-        #print(reward)
+        #print(reward_function)
         #print("action",action)
         #print(ball_angle,yaw_deg_from_y_axis)
         #print(enemy_goal_angle)
@@ -136,7 +139,7 @@ class OnlyBallGoalEnvironment(gym.Env):
         p.resetSimulation()
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.setGravity(0, 0, -9.81)
-        p.loadSDF("stadium.sdf")
+        p.loadSDF('stadium.sdf')
 
         if seed is not None:
             np.random.seed(seed)
@@ -170,3 +173,7 @@ class OnlyBallGoalEnvironment(gym.Env):
 
     def close(self):
         p.disconnect()
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()

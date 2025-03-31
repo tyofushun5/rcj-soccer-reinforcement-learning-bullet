@@ -20,7 +20,7 @@ class ImageRewardCalculation(object):
         self.is_goal = False
         self.is_out = False
 
-        # reward -= step_count*0.001
+        # reward_function -= step_count*0.001
 
         agent_pos, _ = p.getBasePositionAndOrientation(agent_id)
 

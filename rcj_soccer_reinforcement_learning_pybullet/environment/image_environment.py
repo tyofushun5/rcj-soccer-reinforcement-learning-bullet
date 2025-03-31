@@ -9,7 +9,7 @@ from gymnasium import spaces
 
 from rcj_soccer_reinforcement_learning_pybullet.object.unit import Unit
 from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tools import CalculationTool
-from rcj_soccer_reinforcement_learning_pybullet.reward.image_reward import ImageRewardCalculation
+from rcj_soccer_reinforcement_learning_pybullet.reward_function.image_reward import ImageRewardCalculation
 
 class ImageEnvironment(gym.Env):
     def __init__(self, create_position, max_steps, magnitude, gui=False):

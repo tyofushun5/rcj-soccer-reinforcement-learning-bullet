@@ -40,14 +40,15 @@ class Unit(object):
 
     def get_image(self):
         image = self.agent.get_camera_image(self.agent_id)
-
         return image
 
     @staticmethod
     def set_camera(position):
         p.resetDebugVisualizerCamera(cameraDistance=1.70,
-                                     cameraYaw=90,
-                                     cameraPitch=-45,
+                                     cameraYaw=90.0,
+                                     cameraPitch=-45.0,
                                      cameraTargetPosition=[position[0]+0.91, position[1]+1.25, position[2]])
 
-
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
