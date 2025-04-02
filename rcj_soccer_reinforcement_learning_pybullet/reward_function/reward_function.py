@@ -1,12 +1,11 @@
 import pybullet as p
 
 from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tools import CalculationTool
+from rcj_soccer_reinforcement_learning_pybullet.object.court import Court
 
-class RewardFunction(object):
+class RewardFunction(Court):
     def __init__(self):
         super().__init__()
-        self.my_goal_line_idx = 6
-        self.enemy_goal_line_idx = 7
         self.previous_attacker_pos = [0, 0, 0]
         self.past_distance = 0
         self.ball_past_distance = 0

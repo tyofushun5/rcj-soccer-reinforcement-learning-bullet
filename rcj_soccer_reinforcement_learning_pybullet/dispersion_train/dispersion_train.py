@@ -3,7 +3,6 @@ import os
 from sb3_contrib import RecurrentPPO
 from stable_baselines3.common.vec_env import SubprocVecEnv
 from rcj_soccer_reinforcement_learning_pybullet.environment.environment import Environment
-from stable_baselines3.common.callbacks import CheckpointCallback
 
 
 script_dir = os.path.dirname(__file__)

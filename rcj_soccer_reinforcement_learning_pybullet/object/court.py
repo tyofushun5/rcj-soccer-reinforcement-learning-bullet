@@ -146,7 +146,7 @@ class Court(object):
 
         return wall_id, blue_goal_id, yellow_goal_id
 
-    def create_court_line(self):
+    def create_debug_line(self):
         """コートのデバックラインを作成"""
         for i in range(self.num_lines):
             self.line_ids.append(p.addUserDebugLine(
@@ -161,7 +161,7 @@ class Court(object):
                 lifeTime=0
             ))
 
-    def detection_line(self):
+    def detection_debug_line(self):
         """ラインの当たり判定を検出し、ヒット時はラインを上書き更新"""
         self.from_positions = []
         self.to_positions = []

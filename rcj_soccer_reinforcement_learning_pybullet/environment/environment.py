@@ -24,15 +24,22 @@ class Environment(gym.Env):
                                      cameraYaw=50,
                                      cameraPitch=-35,
                                      cameraTargetPosition=[0, 0, 0])
+
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.setGravity(0, 0, -9.81)
         p.loadSDF('stadium.sdf')
 
-        self.action_space = spaces.MultiDiscrete([360, 3])
-        self.observation_space = spaces.Box(low=-np.inf,
-                                            high=np.inf,
+        self.action_space = spaces.Box(
+            low=np.array([-1.0, -1.0], dtype=np.float32),
+            high=np.array([1.0, 1.0], dtype=np.float32),
+            dtype=np.float32
+        )
+
+        self.observation_space = spaces.Box(low=-1.0,
+                                            high=1.0,
                                             shape=(3,),
                                             dtype=np.float32)
+
         self.unit = Unit()
         self.cal = CalculationTool()
         self.reward_cal = RewardFunction()
@@ -46,7 +53,7 @@ class Environment(gym.Env):
         self.magnitude = magnitude
         self.step_count = 0
 
-        self.is_online_obs = 0
+        self.is_online_obs = -1
 
         self.reset()
 
@@ -56,16 +63,12 @@ class Environment(gym.Env):
         info = {}
         self.step_count += 1
 
-        # if self.step_count % 10 == 0:
-        #     self.unit.get_image()
-
-
         self.unit.action(robot_id=self.unit.agent_id,
-                         angle_deg=action[0],
+                         angle=action[0],
                          rotate=action[1],
                          magnitude=self.magnitude)
 
-        for _ in range(10):
+        for i in range(10):
             p.stepSimulation()
 
         agent_pos, agent_ori = p.getBasePositionAndOrientation(self.unit.agent_id)
@@ -73,7 +76,7 @@ class Environment(gym.Env):
         yaw_deg = math.degrees(euler[2])
         yaw_deg = (yaw_deg + 360) % 360
         yaw_deg_from_y_axis = ((90-yaw_deg)-90) % 360
-
+        yaw_deg_from_y_axis = round(yaw_deg_from_y_axis, 2)
 
         ball_angle = self.cal.angle_calculation_id(self.unit.agent_id,
                                                    self.unit.ball_id)
@@ -111,11 +114,17 @@ class Environment(gym.Env):
                                                     self.unit.yellow_goal_id,
                                                     self.step_count)
         if self.reward_cal.is_online:
-            self.is_online_obs = 1
+            self.is_online_obs = 1.0
         else:
-            self.is_online_obs = 0
+            self.is_online_obs = -1.0
 
-        observation = np.array([ball_angle, enemy_goal_angle, self.is_online_obs],dtype=np.float32)
+        normalized_ball_angle = self.cal.normalization(ball_angle)
+        normalized_enemy_goal_angle = self.cal.normalization(enemy_goal_angle)
+
+        observation = np.array([normalized_ball_angle,
+                                normalized_enemy_goal_angle,
+                                self.is_online_obs],
+                                dtype=np.float32)
 
         if self.reward_cal.is_goal:
             terminated = True
@@ -144,14 +153,14 @@ class Environment(gym.Env):
         if seed is not None:
             np.random.seed(seed)
 
-        min_distance = 0.15
+        min_distance = 0.18
 
         while True:
             self.agent_random_pos[0] = random.uniform(0.4, 1.5) + self.cp[0]
-            self.agent_random_pos[1] = random.uniform(0.4, 1.5) + self.cp[1]
+            self.agent_random_pos[1] = random.uniform(0.4, 1.8) + self.cp[1]
 
             self.ball_random_pos[0] = random.uniform(0.4, 1.5) + self.cp[0]
-            self.ball_random_pos[1] = random.uniform(0.4, 1.5) + self.cp[1]
+            self.ball_random_pos[1] = random.uniform(0.4, 1.8) + self.cp[1]
 
             dx = self.agent_random_pos[0] - self.ball_random_pos[0]
             dy = self.agent_random_pos[1] - self.ball_random_pos[1]

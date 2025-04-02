@@ -15,6 +15,16 @@ class CalculationTool(object):
         return angle_deg
 
     @staticmethod
+    def normalization(value):
+        normalized = (value / 180) - 1
+        return normalized
+
+    @staticmethod
+    def denormalization(value):
+        denormalized = (value + 1) * 180
+        return denormalized
+
+    @staticmethod
     def angle_calculation_pos(a_pos, b_pos):
         dx = b_pos[0] - a_pos[0]
         dy = b_pos[1] - a_pos[1]
@@ -53,11 +63,11 @@ class CalculationTool(object):
     def angular_velocity_calculation(number=0):
         angular_velocity = 0.0
         match number:
-            case 0:
+            case -1.0:
                 angular_velocity=0.0
-            case 1:
+            case 0.0:
                 angular_velocity=0.5
-            case 2:
+            case 1.0:
                 angular_velocity=-0.5
         return angular_velocity
 

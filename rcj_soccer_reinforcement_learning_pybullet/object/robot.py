@@ -30,12 +30,12 @@ class Robot(metaclass=abc.ABCMeta):
         pass
 
 
-
 class Agent(Robot):
     def __init__(self, create_position):
         super().__init__()
         self.cp = create_position
         self.start_pos = [1+self.cp[0], 0.5+self.cp[1], 0.1+self.cp[2]]
+        self.default_ori = [0.0, 0.0, 0.0]
         self.position = self.start_pos
         self.radius = 0.11
         self.height = 0.11
@@ -77,7 +77,7 @@ class Agent(Robot):
              baseCollisionShapeIndex=agent_collision,
              baseVisualShapeIndex=agent_visual,
              basePosition=self.position,
-             baseOrientation = p.getQuaternionFromEuler([0.0, 0.0, 0.0])
+             baseOrientation = p.getQuaternionFromEuler(self.default_ori),
          )
 
          return agent_id
@@ -171,6 +171,94 @@ class Agent(Robot):
         rgb_array = np.reshape(rgb, (height, width, 4))
         rgb_image = rgb_array[:, :, :3].astype(np.uint8)
         return rgb_image
+
+
+class AlgorithmRobot(Robot):
+    def __init__(self, create_position, mode='ally'):
+        super().__init__()
+        self.cp = create_position
+        self.start_pos = [1+self.cp[0], 0.5+self.cp[1], 0.1+self.cp[2]]
+        self.default_ori = [0.0, 0.0, 0.0]
+        self.position = self.start_pos
+        self.radius = 0.11
+        self.height = 0.11
+        self.mass = 1.4
+
+        if mode == 'enemy':
+            self.default_ori = [0.0, 0.0, np.pi]
+            self.start_pos = [1+self.cp[0], 0.5+self.cp[1], 0.1+self.cp[2]]
+
+    def create(self, position=None):
+
+        self.position = position
+
+        if position is None:
+            self.position = self.start_pos
+
+
+        robot_collision = p.createCollisionShape(
+            shapeType=p.GEOM_MESH,
+            fileName=robot_collision_path,
+            meshScale=[0.0001, 0.0001, 0.0001]
+        )
+
+        # agent_collision = p.createCollisionShape(
+        #     shapeType=p.GEOM_CYLINDER,
+        #     radius=self.radius,
+        #     height=self.height
+        # )
+
+        # visual_shift = [0, 0, -self.height / 2]
+
+        robot_visual = p.createVisualShape(
+            shapeType=p.GEOM_MESH,
+            fileName=robot_visual_path,
+            meshScale=[0.0001, 0.0001, 0.0001],
+            rgbaColor=[0.2, 0.2, 0.2, 1],
+            # visualFramePosition=visual_shift
+        )
+
+        robot_id = p.createMultiBody(
+            baseMass=self.mass,
+            baseCollisionShapeIndex=robot_collision,
+            baseVisualShapeIndex=robot_visual,
+            basePosition=self.position,
+            baseOrientation = p.getQuaternionFromEuler(self.default_ori),
+        )
+
+        return robot_id
+
+
+    def action(self, agent_id, magnitude=21.0):
+        """ロボットを動かすメソッド"""
+
+        dynamics_info = p.getDynamicsInfo(agent_id, -1)
+        center_of_mass = dynamics_info[3]  # 重心
+
+
+        p.changeDynamics(
+            bodyUniqueId=agent_id,
+            linkIndex=-1,
+            lateralFriction=0.32,  # 摩擦係数
+            spinningFriction=0.01,  # 回転摩擦
+            rollingFriction=0.10,  # 転がり摩擦
+            angularDamping=0.5  # 回転の減衰
+        )
+
+        p.applyExternalForce(
+            objectUniqueId=agent_id,
+            linkIndex=-1,
+            forceObj=[0.0, 0.0, 0.0],
+            posObj=center_of_mass,
+            flags=p.LINK_FRAME
+        )
+
+        p.applyExternalTorque(
+            objectUniqueId=agent_id,
+            linkIndex=-1,
+            torqueObj=[0.0, 0.0, 0.0],
+            flags=p.LINK_FRAME
+        )
 
 if __name__ == '__main__':
     import doctest
