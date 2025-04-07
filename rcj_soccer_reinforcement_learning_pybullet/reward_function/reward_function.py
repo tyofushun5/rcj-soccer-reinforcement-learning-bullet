@@ -44,7 +44,7 @@ class RewardFunction(Court):
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 0.5
+            reward += 0.4
             self.is_touch = True
         else:
             reward -= 0.2
@@ -82,7 +82,7 @@ class RewardFunction(Court):
         else:
             reward -= 0.1
         if angle<=45 or angle>=315:
-            reward += 0.2
+            reward += 0.3
         else:
             reward -= 0.1
         return reward

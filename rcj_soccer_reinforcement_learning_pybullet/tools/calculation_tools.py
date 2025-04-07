@@ -72,6 +72,11 @@ class CalculationTool(object):
         return angular_velocity
 
     @staticmethod
+    def angular_vector_calculation(number=0):
+        angular_vector = number * 0.5
+        return angular_vector
+
+    @staticmethod
     def movement_reward_calculation(pos,
                                     previous_pos,
                                     past_distance,

@@ -18,7 +18,7 @@ checkpoint_callback = CheckpointCallback(save_freq=1000000,
 
 def make_env():
     def _init():
-        env = Environment(max_steps=10000,
+        env = Environment(max_steps=5000,
                               create_position=[4.0, 0.0, 0.0],
                               magnitude=21.0,
                               gui=False)
@@ -28,7 +28,7 @@ def make_env():
 
 def main():
 
-    num_envs = 12
+    num_envs = 18
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     model = RecurrentPPO('MlpLstmPolicy',
@@ -38,9 +38,11 @@ def main():
                          n_epochs=10,
                          n_steps=128,
                          batch_size=128*num_envs,
-                         gamma=0.99)
+                         gamma=0.99,
+                         seed=0
+                         )
 
-    model.learn(total_timesteps=5000000)
+    model.learn(total_timesteps=10000000, callback = checkpoint_callback)
     model.save(os.path.join(save_dir, 'default_model_v1'))
 
     env.close()

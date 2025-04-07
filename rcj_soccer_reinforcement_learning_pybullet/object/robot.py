@@ -100,7 +100,7 @@ class Agent(Robot):
         )
 
         x, y = self.cal.vector_calculations(angle_deg=angle_deg, magnitude=magnitude)
-        angular_velocity = self.cal.angular_velocity_calculation(rotate)
+        angular_vector = self.cal.angular_vector_calculation(rotate)
 
         p.applyExternalForce(
             objectUniqueId=agent_id,
@@ -113,7 +113,7 @@ class Agent(Robot):
         p.applyExternalTorque(
             objectUniqueId=agent_id,
             linkIndex=-1,
-            torqueObj=[0.0, 0.0, angular_velocity],
+            torqueObj=[0.0, 0.0, angular_vector],
             flags=p.LINK_FRAME
         )
 

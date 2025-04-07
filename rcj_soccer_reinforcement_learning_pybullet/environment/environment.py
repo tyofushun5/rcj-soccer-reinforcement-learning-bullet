@@ -37,7 +37,7 @@ class Environment(gym.Env):
 
         self.observation_space = spaces.Box(low=-1.0,
                                             high=1.0,
-                                            shape=(3,),
+                                            shape=(4,),
                                             dtype=np.float32)
 
         self.unit = Unit()
@@ -120,9 +120,11 @@ class Environment(gym.Env):
 
         normalized_ball_angle = self.cal.normalization(ball_angle)
         normalized_enemy_goal_angle = self.cal.normalization(enemy_goal_angle)
+        normalized_my_goal_angle = self.cal.normalization(my_goal_angle)
 
         observation = np.array([normalized_ball_angle,
                                 normalized_enemy_goal_angle,
+                                normalized_my_goal_angle,
                                 self.is_online_obs],
                                 dtype=np.float32)
 
@@ -173,7 +175,7 @@ class Environment(gym.Env):
         self.unit.create_unit(self.cp, self.agent_random_pos, self.ball_random_pos)
 
         self.step_count = 0
-        initial_obs = np.array([0.0, 0.0, 0.0], dtype=np.float32)
+        initial_obs = np.array([0.0, 0.0, 0.0, 0.0], dtype=np.float32)
         info = {}
         return initial_obs, info
 
