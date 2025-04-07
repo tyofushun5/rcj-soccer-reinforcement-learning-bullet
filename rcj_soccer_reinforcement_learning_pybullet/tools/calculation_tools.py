@@ -72,8 +72,7 @@ class CalculationTool(object):
         return angular_velocity
 
     @staticmethod
-    def movement_reward_calculation(reward,
-                                    pos,
+    def movement_reward_calculation(pos,
                                     previous_pos,
                                     past_distance,
                                     fine=0.0,
@@ -81,14 +80,13 @@ class CalculationTool(object):
                                     ):
         distance = CalculationTool.euclidean_distance_pos(pos, previous_pos)
         if distance < past_distance:
-            reward += fine
+            result = fine
         else:
-            reward -= penalty
-        return reward
+            result = penalty
+        return result
 
     @staticmethod
-    def distance_reward_calculation(reward,
-                                    agent_pos,
+    def distance_reward_calculation(agent_pos,
                                     ball_pos,
                                     ball_past_distance,
                                     fine=0.0,
@@ -96,8 +94,8 @@ class CalculationTool(object):
                                     ):
         distance = CalculationTool.euclidean_distance_pos(agent_pos, ball_pos)
         if distance < ball_past_distance:
-            reward += fine
+            reward = fine
         else:
-            reward -= penalty
+            reward = penalty
         return reward
 

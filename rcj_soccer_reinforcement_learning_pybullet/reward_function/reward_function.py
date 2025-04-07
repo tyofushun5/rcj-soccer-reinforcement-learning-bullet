@@ -25,22 +25,20 @@ class RewardFunction(Court):
 
         agent_pos, _ = p.getBasePositionAndOrientation(agent_id)
 
-        reward += self.cal.movement_reward_calculation(reward,
-                                                       agent_pos,
+        reward += self.cal.movement_reward_calculation(agent_pos,
                                                        self.previous_attacker_pos,
                                                        self.past_distance,
-                                                       fine=0.3,
-                                                       penalty=0.3)
+                                                       fine=0.2,
+                                                       penalty=-0.1)
         self.previous_attacker_pos = agent_pos
 
         ball_pos, _ = p.getBasePositionAndOrientation(ball_id)
 
-        reward += self.cal.distance_reward_calculation(reward,
-                                                       agent_pos,
+        reward += self.cal.distance_reward_calculation(agent_pos,
                                                        ball_pos,
                                                        self.ball_past_distance,
-                                                       fine=0.2,
-                                                       penalty=0.2)
+                                                       fine=0.1,
+                                                       penalty=-0.1)
 
         self.ball_past_distance = self.cal.euclidean_distance_pos(agent_pos,
                                                                   ball_pos)
@@ -49,13 +47,13 @@ class RewardFunction(Court):
             reward += 0.5
             self.is_touch = True
         else:
-            reward -= 0.3
+            reward -= 0.2
             self.is_touch = False
         if hit_ids[self.my_goal_line_idx] == ball_id:
-            reward -= 10.0
+            reward -= 100.0
             self.is_out = True
         if hit_ids[self.enemy_goal_line_idx] == ball_id:
-            reward += 10.0
+            reward += 100.0
             self.is_goal = True
         if hit_ids[self.my_goal_line_idx] == agent_id:
             reward -= 5.0

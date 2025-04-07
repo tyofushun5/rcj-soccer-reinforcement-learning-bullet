@@ -40,7 +40,7 @@ class Unit(object):
 
     def action(self, robot_id, angle=0, rotate=0, magnitude=21.0):
         angle_deg = self.cal.denormalization(angle)
-        print("angle_deg",angle_deg)
+        # print("angle_deg",angle_deg)
         self.agent.action(robot_id, angle_deg, rotate, magnitude)
 
     def get_image(self):
