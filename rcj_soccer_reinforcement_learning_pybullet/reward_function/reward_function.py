@@ -37,7 +37,7 @@ class RewardFunction(Court):
         reward += self.cal.distance_reward_calculation(agent_pos,
                                                        ball_pos,
                                                        self.ball_past_distance,
-                                                       fine=0.1,
+                                                       fine=0.2,
                                                        penalty=-0.1)
 
         self.ball_past_distance = self.cal.euclidean_distance_pos(agent_pos,
@@ -47,7 +47,7 @@ class RewardFunction(Court):
             reward += 0.4
             self.is_touch = True
         else:
-            reward -= 0.2
+            reward -= 0.1
             self.is_touch = False
         if hit_ids[self.my_goal_line_idx] == ball_id:
             reward -= 100.0
@@ -78,11 +78,11 @@ class RewardFunction(Court):
         angle = self.cal.angle_calculation_id(agent_id, ball_id)
 
         if angle<=90 or angle>=270:
-            reward += 0.2
+            reward += 0.3
         else:
             reward -= 0.1
         if angle<=45 or angle>=315:
-            reward += 0.3
+            reward += 0.4
         else:
             reward -= 0.1
         return reward
