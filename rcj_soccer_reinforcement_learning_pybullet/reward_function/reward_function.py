@@ -44,7 +44,7 @@ class RewardFunction(Court):
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 0.4
+            reward += 3.0
             self.is_touch = True
         else:
             reward -= 0.1
@@ -72,7 +72,7 @@ class RewardFunction(Court):
             reward -= 0.1
         for i in range(len(hit_ids)):
             if hit_ids[i] == agent_id:
-                reward -= 0.1
+                reward -= 0.3
                 self.is_online = True
 
         angle = self.cal.angle_calculation_id(agent_id, ball_id)
@@ -80,11 +80,11 @@ class RewardFunction(Court):
         if angle<=90 or angle>=270:
             reward += 0.3
         else:
-            reward -= 0.1
+            reward -= 0.2
         if angle<=45 or angle>=315:
             reward += 0.4
         else:
-            reward -= 0.1
+            reward -= 0.2
         return reward
 if __name__ == '__main__':
     import doctest

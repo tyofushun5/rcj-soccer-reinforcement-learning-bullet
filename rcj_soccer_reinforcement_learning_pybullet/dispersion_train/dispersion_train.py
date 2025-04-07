@@ -28,7 +28,7 @@ def make_env():
 
 def main():
 
-    num_envs = 18
+    num_envs = 12
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     model = RecurrentPPO('MlpLstmPolicy',
