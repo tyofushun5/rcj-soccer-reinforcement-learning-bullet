@@ -81,7 +81,7 @@ class RewardFunction(Court):
         if p.getContactPoints(yellow_goal_id, agent_id):
             reward -= 0.5
         if p.getContactPoints(wall_id, ball_id):
-            reward -= 0.1
+            reward -= 0.2
         for i in range(len(hit_ids)):
             if hit_ids[i] == agent_id:
                 reward -= 0.3
