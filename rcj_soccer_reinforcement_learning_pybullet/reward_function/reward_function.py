@@ -59,22 +59,22 @@ class RewardFunction(Court):
             reward -= 0.1
             self.is_touch = False
         if hit_ids[self.my_goal_line_idx] == ball_id:
-            reward -= 10.0
+            reward -= 100.0
             self.is_out = True
         if hit_ids[self.enemy_goal_line_idx] == ball_id:
-            reward += 10.0
+            reward += 100.0
             self.is_goal = True
         if hit_ids[self.my_goal_line_idx] == agent_id:
-            reward -= 10.0
+            reward -= 100.0
             self.is_out = True
         if hit_ids[self.enemy_goal_line_idx] == agent_id:
-            reward -= 10.0
+            reward -= 100.0
             self.is_out = True
         if p.getContactPoints(wall_id, agent_id):
-            reward -= 10.0
+            reward -= 100.0
             self.is_out = True
         if step_count >= max_steps:
-            reward -= 10.0
+            reward -= 100.0
             self.is_out = True
         if p.getContactPoints(blue_goal_id, agent_id):
             reward -= 0.5
