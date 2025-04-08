@@ -19,9 +19,9 @@ checkpoint_callback = CheckpointCallback(save_freq=1000000,
 def make_env():
     def _init():
         env = Environment(max_steps=5000,
-                              create_position=[4.0, 0.0, 0.0],
-                              magnitude=21.0,
-                              gui=False)
+                          create_position=[4.0, 0.0, 0.0],
+                          magnitude=21.0,
+                          gui=False)
 
         return env
     return _init

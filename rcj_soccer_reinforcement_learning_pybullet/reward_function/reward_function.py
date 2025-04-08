@@ -15,7 +15,16 @@ class RewardFunction(Court):
         self.is_online = False
         self.cal = CalculationTool()
 
-    def reward_calculation(self, hit_ids, agent_id, ball_id, wall_id, blue_goal_id, yellow_goal_id, step_count):
+    def reward_calculation(self,
+                           hit_ids,
+                           agent_id,
+                           ball_id,
+                           wall_id,
+                           blue_goal_id,
+                           yellow_goal_id,
+                           step_count,
+                           max_steps,
+        ):
         reward = 0
         self.is_goal = False
         self.is_out = False
@@ -50,19 +59,22 @@ class RewardFunction(Court):
             reward -= 0.1
             self.is_touch = False
         if hit_ids[self.my_goal_line_idx] == ball_id:
-            reward -= 100.0
+            reward -= 10.0
             self.is_out = True
         if hit_ids[self.enemy_goal_line_idx] == ball_id:
-            reward += 100.0
+            reward += 10.0
             self.is_goal = True
         if hit_ids[self.my_goal_line_idx] == agent_id:
-            reward -= 5.0
+            reward -= 10.0
             self.is_out = True
         if hit_ids[self.enemy_goal_line_idx] == agent_id:
-            reward -= 5.0
+            reward -= 10.0
             self.is_out = True
         if p.getContactPoints(wall_id, agent_id):
-            reward -= 5.0
+            reward -= 10.0
+            self.is_out = True
+        if step_count >= max_steps:
+            reward -= 10.0
             self.is_out = True
         if p.getContactPoints(blue_goal_id, agent_id):
             reward -= 0.5

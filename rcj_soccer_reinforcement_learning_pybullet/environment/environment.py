@@ -112,7 +112,8 @@ class Environment(gym.Env):
                                                     self.unit.wall_id,
                                                     self.unit.blue_goal_id,
                                                     self.unit.yellow_goal_id,
-                                                    self.step_count)
+                                                    self.step_count,
+                                                    self.max_steps)
         if self.reward_cal.is_online:
             self.is_online_obs = 1.0
         else:
@@ -130,9 +131,6 @@ class Environment(gym.Env):
 
         if self.reward_cal.is_goal:
             terminated = True
-
-        if self.step_count >= self.max_steps:
-            truncated = True
 
         if  self.reward_cal.is_out:
             truncated = True
