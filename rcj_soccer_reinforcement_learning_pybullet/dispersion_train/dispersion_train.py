@@ -31,7 +31,14 @@ def main():
     num_envs = 12
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
-    policy_kwargs = dict(net_arch=dict(pi=[128, 128, 128], vf=[128, 128, 128]))
+    policy_kwargs = {
+        "net_arch": dict(pi=[256, 256, 256], vf=[256, 256, 256]),
+        "lstm_hidden_size": 256,
+        "n_lstm_layers": 1,
+        "shared_lstm": False,
+        "enable_critic_lstm": True
+    }
+
 
     model = RecurrentPPO('MlpLstmPolicy',
                          env,
