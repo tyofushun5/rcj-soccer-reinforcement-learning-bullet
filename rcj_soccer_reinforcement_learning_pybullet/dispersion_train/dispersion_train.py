@@ -31,6 +31,8 @@ def main():
     num_envs = 12
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
+    policy_kwargs = dict(net_arch=dict(pi=[128, 128, 128], vf=[128, 128, 128]))
+
     model = RecurrentPPO('MlpLstmPolicy',
                          env,
                          device='cuda',
@@ -39,10 +41,14 @@ def main():
                          n_steps=128,
                          batch_size=128*num_envs,
                          gamma=0.99,
-                         seed=0
+                         policy_kwargs=policy_kwargs
                          )
 
-    model.learn(total_timesteps=10000000, callback = checkpoint_callback)
+    model.learn(total_timesteps=10000000,
+                callback=checkpoint_callback,
+                progress_bar=True
+                )
+
     model.save(os.path.join(save_dir, 'default_model_v1'))
 
     env.close()
