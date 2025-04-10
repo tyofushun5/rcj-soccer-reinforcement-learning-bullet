@@ -37,8 +37,8 @@ class RewardFunction(Court):
         reward += self.cal.movement_reward_calculation(agent_pos,
                                                        self.previous_attacker_pos,
                                                        self.past_distance,
-                                                       fine=0.2,
-                                                       penalty=-0.1)
+                                                       fine=0.3,
+                                                       penalty=-0.2)
         self.previous_attacker_pos = agent_pos
 
         ball_pos, _ = p.getBasePositionAndOrientation(ball_id)
@@ -46,14 +46,14 @@ class RewardFunction(Court):
         reward += self.cal.distance_reward_calculation(agent_pos,
                                                        ball_pos,
                                                        self.ball_past_distance,
-                                                       fine=0.2,
-                                                       penalty=-0.1)
+                                                       fine=0.3,
+                                                       penalty=-0.2)
 
         self.ball_past_distance = self.cal.euclidean_distance_pos(agent_pos,
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 3.0
+            reward += 2.0
             self.is_touch = True
         else:
             reward -= 0.1
@@ -65,16 +65,16 @@ class RewardFunction(Court):
             reward += 100.0
             self.is_goal = True
         if hit_ids[self.my_goal_line_idx] == agent_id:
-            reward -= 100.0
+            reward -= 50.0
             self.is_out = True
         if hit_ids[self.enemy_goal_line_idx] == agent_id:
-            reward -= 100.0
+            reward -= 50.0
             self.is_out = True
         if p.getContactPoints(wall_id, agent_id):
-            reward -= 100.0
+            reward -= 50.0
             self.is_out = True
         if step_count >= max_steps:
-            reward -= 100.0
+            reward -= 50.0
             self.is_out = True
         if p.getContactPoints(blue_goal_id, agent_id):
             reward -= 0.5
@@ -92,11 +92,11 @@ class RewardFunction(Court):
         if angle<=90 or angle>=270:
             reward += 0.3
         else:
-            reward -= 0.2
+            reward -= 0.3
         if angle<=45 or angle>=315:
             reward += 0.4
         else:
-            reward -= 0.2
+            reward -= 0.3
         return reward
 if __name__ == '__main__':
     import doctest

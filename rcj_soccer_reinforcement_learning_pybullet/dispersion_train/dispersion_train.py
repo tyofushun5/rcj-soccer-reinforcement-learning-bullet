@@ -28,11 +28,11 @@ def make_env():
 
 def main():
 
-    num_envs = 12
+    num_envs = 30
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     policy_kwargs = {
-        "net_arch": dict(pi=[256, 256, 256], vf=[256, 256, 256]),
+        "net_arch": dict(pi=[256, 256, 256, 256], vf=[256, 256, 256, 256]),
         "lstm_hidden_size": 256,
         "n_lstm_layers": 1,
         "shared_lstm": False,
@@ -51,7 +51,7 @@ def main():
                          policy_kwargs=policy_kwargs
                          )
 
-    model.learn(total_timesteps=10000000,
+    model.learn(total_timesteps=50000000,
                 callback=checkpoint_callback,
                 progress_bar=True
                 )
