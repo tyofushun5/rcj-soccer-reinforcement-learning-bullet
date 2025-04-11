@@ -28,7 +28,7 @@ def make_env():
 
 def main():
 
-    num_envs = 30
+    num_envs = 35
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     policy_kwargs = {
@@ -51,7 +51,7 @@ def main():
                          policy_kwargs=policy_kwargs
                          )
 
-    model.learn(total_timesteps=50000000,
+    model.learn(total_timesteps=100000000,
                 callback=checkpoint_callback,
                 progress_bar=True
                 )
