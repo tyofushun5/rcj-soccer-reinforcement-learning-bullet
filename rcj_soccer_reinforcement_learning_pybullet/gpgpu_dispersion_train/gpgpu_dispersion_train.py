@@ -28,7 +28,7 @@ def make_env():
 
 def main():
 
-    num_envs = 20
+    num_envs = 128
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     policy_kwargs = {
