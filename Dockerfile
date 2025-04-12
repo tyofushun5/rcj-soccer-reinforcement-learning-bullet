@@ -3,7 +3,7 @@ USER root
 
 WORKDIR /workspace
 
-COPY rcj_soccer_reinforcement_learning_pybullet ./rcj_soccer_reinforcement_learning_pybullet
+#COPY rcj_soccer_reinforcement_learning_pybullet ./rcj_soccer_reinforcement_learning_pybullet
 
 RUN apt-get update && apt-get install -y\
     python3-pip\

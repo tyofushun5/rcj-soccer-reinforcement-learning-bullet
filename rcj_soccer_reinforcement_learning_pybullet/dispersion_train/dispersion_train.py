@@ -18,7 +18,7 @@ checkpoint_callback = CheckpointCallback(save_freq=1000000,
 
 def make_env():
     def _init():
-        env = Environment(max_steps=5000,
+        env = Environment(max_steps=2500,
                           create_position=[4.0, 0.0, 0.0],
                           magnitude=21.0,
                           gui=False)
@@ -28,11 +28,12 @@ def make_env():
 
 def main():
 
-    num_envs = 40
+    num_envs = 128
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     policy_kwargs = {
-        "net_arch": dict(pi=[256, 256, 256, 256], vf=[256, 256, 256, 256]),
+        "net_arch": dict(pi=[256, 256, 256, 256, 256],
+                         vf=[256, 256, 256, 256, 256]),
         "lstm_hidden_size": 256,
         "n_lstm_layers": 1,
         "shared_lstm": False,
@@ -44,7 +45,7 @@ def main():
                          env,
                          device='cuda',
                          verbose=1,
-                         n_epochs=10,
+                         n_epochs=15,
                          n_steps=128,
                          batch_size=128*num_envs,
                          gamma=0.99,
