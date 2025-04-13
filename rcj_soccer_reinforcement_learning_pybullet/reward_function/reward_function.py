@@ -74,7 +74,7 @@ class RewardFunction(Court):
             reward -= 50.0
             self.is_out = True
         if step_count >= max_steps:
-            reward -= 50.0
+            # reward -= 50.0
             self.is_out = True
         if p.getContactPoints(blue_goal_id, agent_id):
             reward -= 0.5
