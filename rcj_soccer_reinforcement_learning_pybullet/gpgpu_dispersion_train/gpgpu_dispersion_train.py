@@ -12,13 +12,13 @@ os.makedirs(save_dir, exist_ok=True)
 
 checkpoint_callback = CheckpointCallback(save_freq=1000000,
                                          save_path=save_dir,
-                                         name_prefix='default_model_v1',
+                                         name_prefix='default_model_v3',
                                          save_replay_buffer=True,
                                          save_vecnormalize=True)
 
 def make_env():
     def _init():
-        env = Environment(max_steps=5000,
+        env = Environment(max_steps=10000,
                           create_position=[4.0, 0.0, 0.0],
                           magnitude=21.0,
                           gui=False)
