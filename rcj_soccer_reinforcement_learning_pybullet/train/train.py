@@ -32,7 +32,8 @@ def main():
         n_steps=128,
         batch_size=128,
         gamma=0.99,
-        policy_kwargs=policy_kwargs
+        policy_kwargs=policy_kwargs,
+        max_grad_norm=0.5
     )
 
     model.learn(total_timesteps=5000000)

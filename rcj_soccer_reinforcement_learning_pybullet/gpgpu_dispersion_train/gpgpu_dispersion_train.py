@@ -47,9 +47,10 @@ def main():
                          verbose=1,
                          n_epochs=15,
                          n_steps=256,
-                         batch_size=256*num_envs,
+                         batch_size=256*128,
                          gamma=0.99,
-                         policy_kwargs=policy_kwargs
+                         policy_kwargs=policy_kwargs,
+                         max_grad_norm=0.5
                          )
 
     model.learn(total_timesteps=200000000,
