@@ -26,7 +26,7 @@ class OnnxableSB3Policy(nn.Module):
             pi: th.Tensor,
             vf: th.Tensor,
             episode_start: th.Tensor,
-    ) -> Tuple[th.Tensor, th.Tensor]:
+                ):
 
         return self.policy(
             observation,
@@ -36,11 +36,13 @@ class OnnxableSB3Policy(nn.Module):
             ),
             episode_start,
             deterministic=True,
-        )
+            )
 
 
 def main():
-    model = RecurrentPPO.load(path=model_path, device="cpu")
+    os.makedirs("checkpoints", exist_ok=True)
+
+    model = RecurrentPPO.load(path=model_path, device="cuda")
 
     observation_size = model.observation_space.shape
     dummy_observation = np.zeros((1, *observation_size), dtype=np.float32)
@@ -53,19 +55,24 @@ def main():
         deterministic=True,
     )
 
-    print(f"dummy_lstm_states: {dummy_lstm_states[0]}")
+    pi_state, vf_state = dummy_lstm_states  # 各ステートは Tensor に変換
 
+    # モデルのエクスポート
     th.onnx.export(
         model=OnnxableSB3Policy(model.policy),
         args=(
-            th.randn((1, *observation_size), dtype=th.float32),
-            th.from_numpy(np.array([dummy_lstm_states[0], dummy_lstm_states[1]])),
-            th.from_numpy(np.array([dummy_lstm_states[0], dummy_lstm_states[1]])),
-            th.ones((1,), dtype=th.float32),
+            th.from_numpy(dummy_observation),
+            th.from_numpy(pi_state),
+            th.from_numpy(vf_state),
+            th.from_numpy(dummy_episode_starts),
         ),
         f="checkpoints/robocup.onnx",
+        input_names=["obs", "pi", "vf", "episode_start"],
+        output_names=["action", "value"],
+        opset_version=11,
     )
 
+    # PyBullet 環境確認用ループ
     env = Environment(
         max_steps=5000,
         create_position=[4.0, 0.0, 0.0],
@@ -75,8 +82,8 @@ def main():
 
     lstm_states = None
     episode_starts = np.ones((1,), dtype=bool)
-
     obs = env.reset()
+
     for _ in range(1000):
         actions, lstm_states = model.predict(
             observation=obs[0],
@@ -95,6 +102,7 @@ def main():
 
         if done:
             env.reset()
+
 
 
 if __name__ == "__main__":
