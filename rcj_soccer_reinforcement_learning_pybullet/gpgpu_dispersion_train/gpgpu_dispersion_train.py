@@ -58,7 +58,7 @@ def main():
                 progress_bar=True
                 )
 
-    model.save(os.path.join(save_dir, 'default_model_v1'))
+    model.save(os.path.join(save_dir, 'default_model_v3'))
 
     env.close()
 
