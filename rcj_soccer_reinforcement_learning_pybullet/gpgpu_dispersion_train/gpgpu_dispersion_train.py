@@ -45,7 +45,7 @@ def main():
                          env,
                          device='cuda',
                          verbose=1,
-                         n_epochs=10,
+                         n_epochs=15,
                          n_steps=256,
                          batch_size=256*128,
                          gamma=0.99,
