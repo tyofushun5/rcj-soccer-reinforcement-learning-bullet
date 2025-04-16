@@ -53,7 +53,7 @@ def main():
                          max_grad_norm=1.0
                          )
 
-    model.learn(total_timesteps=200000000,
+    model.learn(total_timesteps=200000,
                 callback=checkpoint_callback,
                 progress_bar=True
                 )
