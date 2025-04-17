@@ -18,7 +18,7 @@ checkpoint_callback = CheckpointCallback(save_freq=1000000,
 
 def make_env():
     def _init():
-        env = Environment(max_steps=5000,
+        env = Environment(max_steps=10000,
                           create_position=[4.0, 0.0, 0.0],
                           magnitude=21.0,
                           gui=False)
@@ -45,7 +45,7 @@ def main():
                          env,
                          device='cuda',
                          verbose=1,
-                         n_epochs=15,
+                         n_epochs=20,
                          n_steps=256,
                          batch_size=256*128,
                          gamma=0.99,
@@ -54,7 +54,7 @@ def main():
                          )
 
     model.learn(total_timesteps=200000000,
-                callback=checkpoint_callback,
+                #callback=checkpoint_callback,
                 progress_bar=True
                 )
 
