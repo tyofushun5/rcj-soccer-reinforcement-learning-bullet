@@ -3,6 +3,7 @@ import pybullet as p
 from rcj_soccer_reinforcement_learning_pybullet.tools.calculation_tools import CalculationTool
 from rcj_soccer_reinforcement_learning_pybullet.object.court import Court
 
+
 class RewardFunction(Court):
     def __init__(self):
         super().__init__()

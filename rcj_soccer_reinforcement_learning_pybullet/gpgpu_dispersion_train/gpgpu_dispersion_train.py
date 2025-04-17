@@ -12,7 +12,7 @@ os.makedirs(save_dir, exist_ok=True)
 
 checkpoint_callback = CheckpointCallback(save_freq=2000,
                                          save_path=save_dir,
-                                         name_prefix='default_model_v3',
+                                         name_prefix='default_model_v4',
                                          save_replay_buffer=True,
                                          save_vecnormalize=True)
 
@@ -58,7 +58,7 @@ def main():
                 progress_bar=True
                 )
 
-    model.save(os.path.join(save_dir, 'default_model_v3'))
+    model.save(os.path.join(save_dir, 'default_model_v4'))
 
     env.close()
 
