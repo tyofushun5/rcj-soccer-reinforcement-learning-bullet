@@ -10,7 +10,7 @@ parent_dir = os.path.dirname(script_dir)
 save_dir = os.path.join(parent_dir, 'model','default_model')
 os.makedirs(save_dir, exist_ok=True)
 
-checkpoint_callback = CheckpointCallback(save_freq=1000000,
+checkpoint_callback = CheckpointCallback(save_freq=2000,
                                          save_path=save_dir,
                                          name_prefix='default_model_v3',
                                          save_replay_buffer=True,
