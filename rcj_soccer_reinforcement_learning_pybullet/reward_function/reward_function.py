@@ -99,6 +99,7 @@ class RewardFunction(Court):
         else:
             reward -= 0.3
         return reward
+    
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
