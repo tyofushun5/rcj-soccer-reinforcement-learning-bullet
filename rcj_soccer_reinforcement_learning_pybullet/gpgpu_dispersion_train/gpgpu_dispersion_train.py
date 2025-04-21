@@ -10,7 +10,7 @@ parent_dir = os.path.dirname(script_dir)
 save_dir = os.path.join(parent_dir, 'model','default_model')
 os.makedirs(save_dir, exist_ok=True)
 
-checkpoint_callback = CheckpointCallback(save_freq=2000,
+checkpoint_callback = CheckpointCallback(save_freq=1000000,
                                          save_path=save_dir,
                                          name_prefix='default_model_v4',
                                          save_replay_buffer=True,
@@ -53,8 +53,8 @@ def main():
                          max_grad_norm=1.0
                          )
 
-    model.learn(total_timesteps=200000000,
-                #callback=checkpoint_callback,
+    model.learn(total_timesteps=100000000,
+                callback=checkpoint_callback,
                 progress_bar=True
                 )
 
