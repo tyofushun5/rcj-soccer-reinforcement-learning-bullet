@@ -12,7 +12,7 @@ os.makedirs(save_dir, exist_ok=True)
 
 checkpoint_callback = CheckpointCallback(save_freq=1000000,
                                          save_path=save_dir,
-                                         name_prefix='default_model_v4',
+                                         name_prefix='default_model_v5',
                                          save_replay_buffer=True,
                                          save_vecnormalize=True)
 
@@ -32,8 +32,8 @@ def main():
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     policy_kwargs = {
-        "net_arch": dict(pi=[128, 128, 128, 128],
-                         vf=[128, 128, 128, 128]),
+        "net_arch": dict(pi=[128, 128, 128, 128, 128],
+                         vf=[128, 128, 128, 128, 128]),
         "lstm_hidden_size": 256,
         "n_lstm_layers": 1,
         "shared_lstm": False,
@@ -58,7 +58,7 @@ def main():
                 progress_bar=True
                 )
 
-    model.save(os.path.join(save_dir, 'default_model_v4'))
+    model.save(os.path.join(save_dir, 'default_model_v5'))
 
     env.close()
 
