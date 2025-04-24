@@ -54,7 +54,7 @@ class RewardFunction(Court):
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 2.0
+            reward += 0.5
             self.is_touch = True
         else:
             reward -= 0.1
@@ -75,7 +75,7 @@ class RewardFunction(Court):
             reward -= 5.0
             self.is_out = True
         if step_count >= max_steps:
-            # reward -= 5.0
+            reward -= 5.0
             self.is_out = True
         if p.getContactPoints(blue_goal_id, agent_id):
             reward -= 0.5

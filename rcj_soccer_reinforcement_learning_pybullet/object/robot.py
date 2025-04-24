@@ -66,7 +66,7 @@ class Agent(Robot):
 
          agent_visual = p.createVisualShape(
              shapeType=p.GEOM_MESH,
-             fileName=robot_collision_path,
+             fileName=robot_visual_path,
              meshScale=[0.0001, 0.0001, 0.0001],
              rgbaColor=[0.2, 0.2, 0.2, 1],
              # visualFramePosition=visual_shift
