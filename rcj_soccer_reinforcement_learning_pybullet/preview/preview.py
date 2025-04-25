@@ -5,7 +5,7 @@ from rcj_soccer_reinforcement_learning_pybullet.environment.environment import E
 
 script_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(script_dir)
-model_path = os.path.join(parent_dir, 'model', 'default_model', 'default_model_v4')
+model_path = os.path.join(parent_dir, 'model', 'default_model', 'default_model_v5')
 
 def main():
     preview_env = Environment(

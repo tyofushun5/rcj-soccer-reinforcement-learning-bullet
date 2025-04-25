@@ -54,16 +54,16 @@ class RewardFunction(Court):
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 0.5
+            reward += 1.0
             self.is_touch = True
         else:
             reward -= 0.1
             self.is_touch = False
         if hit_ids[self.my_goal_line_idx] == ball_id:
-            reward -= 10.0
+            reward -= 100.0
             self.is_out = True
         if hit_ids[self.enemy_goal_line_idx] == ball_id:
-            reward += 10.0
+            reward += 100.0
             self.is_goal = True
         if hit_ids[self.my_goal_line_idx] == agent_id:
             reward -= 5.0
@@ -85,7 +85,7 @@ class RewardFunction(Court):
             reward -= 0.2
         for i in range(len(hit_ids)):
             if hit_ids[i] == agent_id:
-                reward -= 0.3
+                reward -= 0.2
                 self.is_online = True
 
         angle = self.cal.angle_calculation_id(agent_id, ball_id)
@@ -95,7 +95,7 @@ class RewardFunction(Court):
         else:
             reward -= 0.3
         if angle<=45 or angle>=315:
-            reward += 0.4
+            reward += 0.5
         else:
             reward -= 0.3
         return reward
