@@ -28,7 +28,7 @@ def make_env():
 
 def main():
 
-    num_envs = 20
+    num_envs = 12
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     policy_kwargs = {
@@ -45,7 +45,7 @@ def main():
                          env,
                          device='cuda',
                          verbose=1,
-                         n_epochs=15,
+                         n_epochs=10,
                          n_steps=128,
                          batch_size=128*num_envs,
                          gamma=0.99,

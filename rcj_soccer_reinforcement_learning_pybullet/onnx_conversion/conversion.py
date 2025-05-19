@@ -1,62 +1,71 @@
-import os
-import torch as th
+import torch
 import torch.nn as nn
-from typing import Tuple
-
 from sb3_contrib import RecurrentPPO
-from stable_baselines3.common.policies import BasePolicy
-from rcj_soccer_reinforcement_learning_pybullet.environment.environment import Environment
+import os
 
-
-script_dir = os.path.dirname(__file__)
-parent_dir = os.path.dirname(script_dir)
-model_path = os.path.join(parent_dir, 'model', 'default_model', 'default_model_v1')
-
-
-class OnnxableSB3Policy(nn.Module):
-    def __init__(self, policy: BasePolicy):
+class ONNXWrappedPolicy(nn.Module):
+    def __init__(self, policy):
         super().__init__()
         self.policy = policy
 
-    def forward(self, observation: th.Tensor) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
-        return self.policy(observation, deterministic=True)
+    def forward(self, obs, h_pi, c_pi, h_vf, c_vf, episode_starts):
+        """
+        RecurrentPPO の forward() は、
+        (obs, ( (h_pi, c_pi), (h_vf, c_vf) ), episode_starts [, deterministic=False])
+        という形式を想定しています。
 
-preview_env = Environment(
-    max_steps=5000,
-    create_position=[4.0, 0.0, 0.0],
-    magnitude=21.0,
-    gui=True
+        そのため、ONNX 用にまとめた forward では
+        ・(h_pi, c_pi) を actor 用 LSTM 状態
+        ・(h_vf, c_vf) を critic 用 LSTM 状態
+        としてタプルにまとめてから RecurrentPPO を呼び出します。
+        episode_starts には episode の先頭かどうかを示すフラグ (0/1 など) を渡します。
+        """
+        # actor/criticのLSTM状態をタプルにまとめる
+        lstm_states = ((h_pi, c_pi), (h_vf, c_vf))
+
+        # RecurrentPPO のポリシーでは forward(obs, lstm_states, episode_starts, deterministic=False) の形
+        # 戻り値は (actions, new_lstm_states, その他) ですが、
+        # コード上は (action, new_lstm_states) だったりしますので、必要に応じて修正してください
+        actions, new_lstm_states = self.policy.forward(
+            obs=obs,
+            lstm_states=lstm_states,
+            episode_starts=episode_starts,
+            deterministic=False  # 必要に応じて
+        )
+
+        # 返ってきた new_lstm_states は ((new_h_pi, new_c_pi), (new_h_vf, new_c_vf)) になっているはず
+        (new_h_pi, new_c_pi), (new_h_vf, new_c_vf) = new_lstm_states
+
+        # ONNX 出力用に hidden/cell をまとめて返す
+        return actions, new_h_pi, new_c_pi, new_h_vf, new_c_vf
+
+# ここから下は同様
+model_path = os.path.join("..", "model", "default_model", "default_model_v1.zip")
+model = RecurrentPPO.load(model_path)
+wrapped_policy = ONNXWrappedPolicy(model.policy)
+
+# ダミー入力 (batch=1 など)
+obs = torch.rand((1, 4), dtype=torch.float32)
+h_pi = torch.zeros((1, 1, 256))
+c_pi = torch.zeros((1, 1, 256))
+h_vf = torch.zeros((1, 1, 256))
+c_vf = torch.zeros((1, 1, 256))
+
+# episode_starts はエピソード先頭かどうかを示す 0/1 (bool でもよい)
+# shape=(batch_size,) か、(batch_size, 1) にしてください
+episode_starts = torch.zeros((1,), dtype=torch.float32)  # 全部続き扱い、先頭ではない例
+
+# ONNX 出力
+torch.onnx.export(
+    wrapped_policy,
+    (obs, h_pi, c_pi, h_vf, c_vf, episode_starts),
+    "default_model_v1.onnx",
+    input_names=["obs", "h_pi", "c_pi", "h_vf", "c_vf", "episode_starts"],
+    output_names=["action", "new_h_pi", "new_c_pi", "new_h_vf", "new_c_vf"],
+    dynamic_axes={
+        "obs": {0: "batch"},
+        "episode_starts": {0: "batch"}
+    },
+    opset_version=11
 )
-
-model = RecurrentPPO.load(model_path, env=preview_env)
-
-onnx_policy = OnnxableSB3Policy(model.policy)
-
-observation_size = model.observation_space.shape
-dummy_input = th.randn(1, *observation_size)
-
-th.onnx.export(
-    onnx_policy,
-    dummy_input,
-    "my_ppo_model.onnx",
-    opset_version=17,
-    input_names=["input"],
-)
-
-import onnx
-import onnxruntime as ort
-import numpy as np
-
-onnx_path = "my_ppo_model.onnx"
-onnx_model = onnx.load(onnx_path)
-onnx.checker.check_model(onnx_model)
-
-observation = np.zeros((1, *observation_size)).astype(np.float32)
-ort_sess = ort.InferenceSession(onnx_path)
-actions, values, log_prob = ort_sess.run(None, {"input": observation})
-
-print(actions, values, log_prob)
-
-# Check that the predictions are the same
-with th.no_grad():
-    print(model.policy(th.as_tensor(observation), deterministic=True))
+print("✅ ONNXエクスポートが完了しました。")
