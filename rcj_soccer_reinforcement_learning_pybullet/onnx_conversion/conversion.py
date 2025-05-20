@@ -9,17 +9,6 @@ class ONNXWrappedPolicy(nn.Module):
         self.policy = policy
 
     def forward(self, obs, h_pi, c_pi, h_vf, c_vf, episode_starts):
-        """
-        RecurrentPPO の forward() は、
-        (obs, ( (h_pi, c_pi), (h_vf, c_vf) ), episode_starts [, deterministic=False])
-        という形式を想定しています。
-
-        そのため、ONNX 用にまとめた forward では
-        ・(h_pi, c_pi) を actor 用 LSTM 状態
-        ・(h_vf, c_vf) を critic 用 LSTM 状態
-        としてタプルにまとめてから RecurrentPPO を呼び出します。
-        episode_starts には episode の先頭かどうかを示すフラグ (0/1 など) を渡します。
-        """
         # actor/criticのLSTM状態をタプルにまとめる
         lstm_states = ((h_pi, c_pi), (h_vf, c_vf))
 
@@ -44,15 +33,12 @@ model_path = os.path.join("..", "model", "default_model", "default_model_v1.zip"
 model = RecurrentPPO.load(model_path)
 wrapped_policy = ONNXWrappedPolicy(model.policy)
 
-# ダミー入力 (batch=1 など)
 obs = torch.rand((1, 4), dtype=torch.float32)
 h_pi = torch.zeros((1, 1, 256))
 c_pi = torch.zeros((1, 1, 256))
 h_vf = torch.zeros((1, 1, 256))
 c_vf = torch.zeros((1, 1, 256))
 
-# episode_starts はエピソード先頭かどうかを示す 0/1 (bool でもよい)
-# shape=(batch_size,) か、(batch_size, 1) にしてください
 episode_starts = torch.zeros((1,), dtype=torch.float32)  # 全部続き扱い、先頭ではない例
 
 # ONNX 出力
@@ -68,4 +54,3 @@ torch.onnx.export(
     },
     opset_version=11
 )
-print("✅ ONNXエクスポートが完了しました。")
