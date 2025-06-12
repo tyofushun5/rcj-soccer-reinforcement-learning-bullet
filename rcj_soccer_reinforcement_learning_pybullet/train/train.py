@@ -34,7 +34,7 @@ def main():
 
     model.learn(total_timesteps=5000000)
     
-    model.save(os.path.join(save_dir, 'default_model_v1'))
+    model.save(os.path.join(save_dir, 'default_model_v10'))
 
     env.close()
 
