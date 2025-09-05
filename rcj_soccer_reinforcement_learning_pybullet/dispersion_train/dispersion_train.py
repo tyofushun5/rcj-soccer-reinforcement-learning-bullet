@@ -12,7 +12,7 @@ os.makedirs(save_dir, exist_ok=True)
 
 checkpoint_callback = CheckpointCallback(save_freq=1000000,
                                          save_path=save_dir,
-                                         name_prefix='default_model_v6',
+                                         name_prefix='default_model_v1',
                                          save_replay_buffer=True,
                                          save_vecnormalize=True)
 
