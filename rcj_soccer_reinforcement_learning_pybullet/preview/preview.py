@@ -5,11 +5,11 @@ from rcj_soccer_reinforcement_learning_pybullet.environment.environment import E
 
 script_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(script_dir)
-model_path = os.path.join(parent_dir, 'model', 'default_model', 'default_model_v1')
+model_path = os.path.join(parent_dir, 'model', 'default_model', 'default_model_v3_12000000_steps')
 
 def main():
     preview_env = Environment(
-        max_steps=5000,
+        max_steps=10000,
         create_position=[4.0, 0.0, 0.0],
         magnitude=21.0,
         gui=True

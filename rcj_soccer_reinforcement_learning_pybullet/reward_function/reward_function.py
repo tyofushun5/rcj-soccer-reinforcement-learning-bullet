@@ -54,10 +54,10 @@ class RewardFunction(Court):
                                                                   ball_pos)
 
         if p.getContactPoints(ball_id, agent_id):
-            reward += 1.0
+            # reward += 1.0
             self.is_touch = True
         else:
-            reward -= 0.1
+            # reward -= 0.1
             self.is_touch = False
         if hit_ids[self.my_goal_line_idx] == ball_id:
             reward -= 100.0
@@ -74,30 +74,30 @@ class RewardFunction(Court):
         if p.getContactPoints(wall_id, agent_id):
             reward -= 5.0
             self.is_out = True
-        if step_count >= max_steps:
-            reward -= 5.0
-            self.is_out = True
-        if p.getContactPoints(blue_goal_id, agent_id):
-            reward -= 0.5
-        if p.getContactPoints(yellow_goal_id, agent_id):
-            reward -= 0.5
-        if p.getContactPoints(wall_id, ball_id):
-            reward -= 0.2
+        # if step_count >= max_steps:
+        #     reward -= 5.0
+        #     self.is_out = True
+        # if p.getContactPoints(blue_goal_id, agent_id):
+        #     reward -= 0.5
+        # if p.getContactPoints(yellow_goal_id, agent_id):
+        #     reward -= 0.5
+        # if p.getContactPoints(wall_id, ball_id):
+        #     reward -= 0.2
         for i in range(len(hit_ids)):
             if hit_ids[i] == agent_id:
-                reward -= 0.2
+                # reward -= 0.2
                 self.is_online = True
-
-        angle = self.cal.angle_calculation_id(agent_id, ball_id)
-
-        if angle<=90 or angle>=270:
-            reward += 0.3
-        else:
-            reward -= 0.3
-        if angle<=45 or angle>=315:
-            reward += 0.5
-        else:
-            reward -= 0.3
+        #
+        # angle = self.cal.angle_calculation_id(agent_id, ball_id)
+        #
+        # if angle<=90 or angle>=270:
+        #     reward += 0.3
+        # else:
+        #     reward -= 0.3
+        # if angle<=45 or angle>=315:
+        #     reward += 0.5
+        # else:
+        #     reward -= 0.3
         return reward
     
 if __name__ == '__main__':
