@@ -10,9 +10,9 @@ parent_dir = os.path.dirname(script_dir)
 save_dir = os.path.join(parent_dir, 'model','default_model')
 os.makedirs(save_dir, exist_ok=True)
 
-checkpoint_callback = CheckpointCallback(save_freq=1000000,
+checkpoint_callback = CheckpointCallback(save_freq=1_000_000,
                                          save_path=save_dir,
-                                         name_prefix='default_model_v3',
+                                         name_prefix='default_model_v1',
                                          save_replay_buffer=True,
                                          save_vecnormalize=True)
 
@@ -28,37 +28,42 @@ def make_env():
 
 def main():
 
-    num_envs = 12
+    num_envs = 20
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     policy_kwargs = {
-        "net_arch": dict(pi=[256, 256, 256, 256],
-                         vf=[256, 256, 256, 256]),
+        "net_arch": dict(pi=[256, 256, 256],
+                         vf=[256, 256, 256]),
         "lstm_hidden_size": 256,
         "n_lstm_layers": 1,
         "shared_lstm": False,
-        "enable_critic_lstm": True
+        "enable_critic_lstm": True,
+        "ortho_init": False,
     }
-
 
     model = RecurrentPPO('MlpLstmPolicy',
                          env,
                          device='cuda',
                          verbose=1,
                          n_epochs=10,
-                         n_steps=256,
-                         batch_size=256,
-                         gamma=0.99,
-                         policy_kwargs=policy_kwargs,
-                         max_grad_norm=1.0
+                         n_steps=512,
+                         batch_size=512,
+                         gae_lambda=0.95,
+                         clip_range=0.2,
+                         ent_coef=0.01,
+                         vf_coef=0.5,
+                         target_kl=0.02,
+                         learning_rate=3e-4,
+                         max_grad_norm=1.0,
+                         policy_kwargs=policy_kwargs
                          )
 
-    model.learn(total_timesteps=100000000,
+    model.learn(total_timesteps=10000000,
                 callback=checkpoint_callback,
                 progress_bar=True
                 )
 
-    model.save(os.path.join(save_dir, 'default_model_v3'))
+    model.save(os.path.join(save_dir, 'default_model_v1'))
 
     env.close()
 
