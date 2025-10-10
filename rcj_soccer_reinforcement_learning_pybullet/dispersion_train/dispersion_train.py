@@ -28,13 +28,13 @@ def make_env():
 
 def main():
 
-    num_envs = 8
+    num_envs = 12
     env = SubprocVecEnv([make_env() for _ in range(num_envs)])
 
     policy_kwargs = {
-        "net_arch": dict(pi=[256, 128],
-                         vf=[256, 128]),
-        "lstm_hidden_size": 128,
+        "net_arch": dict(pi=[256, 256, 256],
+                         vf=[256, 256, 256]),
+        "lstm_hidden_size": 256,
         "n_lstm_layers": 1,
         "shared_lstm": False,
         "enable_critic_lstm": True,
@@ -46,8 +46,8 @@ def main():
                          device='cuda',
                          verbose=1,
                          n_epochs=10,
-                         n_steps=128,
-                         batch_size=512,
+                         n_steps=256,
+                         batch_size=256 * num_envs,
                          gae_lambda=0.995,
                          clip_range=0.15,
                          ent_coef=0.005,
